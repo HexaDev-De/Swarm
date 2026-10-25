@@ -118,4 +118,9 @@ jobs:
 
           cd release-suite
           ls -la
-          find . -maxdepth 1 -type f -size +0c -exec gh release upload "$TAG" {} --clobber +
+          for file in *; do
+            if [ -f "$file" ] && [ -s "$file" ]; then
+              echo "Uploading $file..."
+              gh release upload "$TAG" "$file" --clobber
+            fi
+          done
