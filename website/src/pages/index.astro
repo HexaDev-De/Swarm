@@ -1,0 +1,130 @@
+---
+import '../style.css';
+import '../new-features.css';
+import '../motion.css';
+import { demo, icon, logo } from '../lib/demo';
+import DistributionNote from '../components/DistributionNote.astro';
+import { distribution, platformDownloads, project } from '../lib/distribution';
+import PreviewTag from '../components/PreviewTag.astro';
+import AlphaNotice from '../components/AlphaNotice.astro';
+import Comparison from '../components/Comparison.astro';
+import PrivacySection from '../components/PrivacySection.astro';
+import NewFeatures from '../components/NewFeatures.astro';
+import OpenSource from '../components/OpenSource.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f9f2">
+  <title>PandaCode — A calmer place to build.</title>
+  <meta name="description" content="A free, open-source desktop workspace for your coding agents. No account, no telemetry. Bring Claude Code, Codex, Kimi Code and more together with agent teams, always-on bots, VMs and cloud sandboxes, iOS and Android simulators, one-click deploys, a task board, and a little room to breathe.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PandaCode — A calmer place to build.">
+  <meta property="og:description" content="Your coding agents. One thoughtfully quiet workspace. Free and open source for macOS, Windows, and Linux.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <noscript><link rel="stylesheet" href="/static-motion.css"></noscript>
+  <link rel="preload" as="image" href="/assets/morning-bamboo-1600.webp" imagesrcset="/assets/morning-bamboo-800.webp 800w, /assets/morning-bamboo-1600.webp 1600w" imagesizes="100vw" fetchpriority="high">
+
+
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="navigation">
+    <nav class="nav-inner" aria-label="Main navigation">
+      <a class="wordmark" href="#" aria-label="PandaCode home"><img src="/favicon.svg" width="30" height="30" alt="">PandaCode<PreviewTag /></a>
+      <div class="nav-links"><a href="#whats-new">What’s new</a><a href="#experience">Features</a><a href="#comparison">Compare</a><a href="#open-source">Open source</a><a href="#privacy">Privacy</a><a href={project.repo} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a></div>
+      <a class="button button-small" href="#download" aria-label="Download PandaCode">Download <span aria-hidden="true">↓</span></a>
+    </nav>
+    <span class="scroll-progress" aria-hidden="true"></span>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <picture class="hero-landscape" aria-hidden="true"><source srcset="/assets/morning-bamboo-800.webp 800w, /assets/morning-bamboo-1600.webp 1600w" sizes="100vw"><img src="/assets/morning-bamboo-1600.webp" width="1600" height="901" alt="" fetchpriority="high"></picture>
+      <div class="hero-leaves" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="hero-copy">
+        <div class="hero-pills"><a class="new-pill" href="#whats-new"><b>NEW</b>Bots, agent teams, VMs & deploys <span aria-hidden="true">→</span></a><a class="new-pill oss-pill" href="#open-source"><b>OSS</b>Free & open source <span aria-hidden="true">→</span></a></div>
+        <p class="eyebrow">A LITTLE SPACE FOR BIG IDEAS</p>
+        <h1 id="hero-title"><span class="rise">Great work.</span><br><span class="rise">A calmer place.</span></h1>
+        <p class="hero-description">Your favorite coding agents.<br>One thoughtfully quiet workspace.</p>
+        <AlphaNotice id="hero-alpha" />
+        <div class="hero-actions"><a class="button" href={project.releases} target="_blank" rel="noopener noreferrer" data-download aria-describedby={distribution.isUnsignedPreview ? 'hero-alpha hero-distribution' : 'hero-alpha'}><span data-icon="leaf" set:html={icon("leaf")}></span> Download PandaCode <span aria-hidden="true">↗</span></a><a class="text-link" href={project.repo} target="_blank" rel="noopener noreferrer" data-source>Star on GitHub <span aria-hidden="true">↗</span></a></div>
+        <p class="download-caption">Free & open source under an MIT-based license. No account. No telemetry.<br>Bring your own coding agents; their subscriptions and usage are yours.</p>
+        <DistributionNote id="hero-distribution" />
+      </div>
+      <div class="hero-product" id="hero-demo" aria-label="PandaCode conversation preview" set:html={demo()}></div>
+      <div class="hero-footnote"><span class="tiny-leaf" aria-hidden="true">✳</span> A space to focus. An agent for everything else.</div>
+    </section>
+
+    <section class="harnesses section-width" aria-label="Supported coding harnesses">
+      <p>Different minds. Perfectly at home.</p>
+      <div class="harness-list">
+        <span><span data-logo="claude" set:html={logo("claude")}></span>Claude Code</span><span><span data-logo="codex" set:html={logo("codex")}></span>Codex</span><span><span data-logo="kimi" set:html={logo("kimi")}></span>Kimi Code</span><span><span data-logo="opencode" set:html={logo("opencode")}></span>OpenCode</span><span><span data-logo="glm" set:html={logo("glm")}></span>GLM <small>via Claude Code</small></span><span><span data-logo="antigravity" set:html={logo("antigravity")}></span>Antigravity</span>
+      </div>
+    </section>
+
+    <NewFeatures />
+
+    <section id="experience" class="experience section-width" aria-labelledby="experience-title">
+      <div class="section-heading reveal"><p class="eyebrow">LESS JUGGLING. MORE MAKING.</p><h2 id="experience-title">Find your flow.<br>Keep everything in it.</h2></div>
+      <div class="story-layout">
+        <div class="story-chapters">
+          <article class="story-step" data-scene="conversation"><span class="chapter-number">01 / CONVERSATIONS</span><h3>Start with<br>a little “what if.”</h3><p>Pick your harness and model. Share an idea. Watch the response unfold, with the busywork neatly tucked away.</p><p class="feature-detail">Live responses. Resumable threads. Your choice of model.</p></article>
+          <article class="story-step" data-scene="board"><span class="chapter-number">02 / PROJECT BOARD</span><h3>A clear view.<br>From here to done.</h3><p>Give every idea a place. Start a task when you’re ready, follow its progress, and review the work before calling it complete.</p><p class="feature-detail">Pending → In progress → Review → Completed</p></article>
+          <article class="story-step" data-scene="team"><span class="chapter-number">03 / ARCHITECT & WORKERS</span><h3>One big idea.<br>A few good minds.</h3><p>Let an architect plan the work and delegate to focused agents. Mix models, run workers in parallel, and keep an eye on every thread.</p><p class="feature-detail">Up to three workers. Saved team profiles. You stay in control.</p></article>
+          <article class="story-step" data-scene="review"><span class="chapter-number">04 / CHANGES & CONTEXT</span><h3>See what changed.<br>Know what’s next.</h3><p>Clear file summaries and proper diffs make review part of the conversation. Bring in a browser screenshot or a moodboard when words aren’t enough.</p><p class="feature-detail">Saved turn diffs. Visual references. Browser context.</p></article>
+        </div>
+        <div class="story-visual">
+          <div class="story-demo" id="story-demo" aria-label="Interactive PandaCode product preview" set:html={demo(true)}></div>
+          <div class="scene-controls" role="group" aria-label="Preview a feature"><button type="button" data-show-scene="conversation" aria-pressed="true">Chat</button><button type="button" data-show-scene="board" aria-pressed="false">Board</button><button type="button" data-show-scene="team" aria-pressed="false">Team</button><button type="button" data-show-scene="review" aria-pressed="false">Review</button></div>
+          <p class="preview-label">Interactive product preview. Go on, explore.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="overlay-feature" aria-labelledby="overlay-title">
+      <picture class="feature-landscape" aria-hidden="true"><source srcset="/assets/lake-dawn-800.webp 800w, /assets/lake-dawn-1600.webp 1600w" sizes="100vw"><img src="/assets/lake-dawn-1600.webp" width="1600" height="901" alt="" loading="lazy" decoding="async"></picture>
+      <div class="overlay-feature-content section-width">
+        <div class="overlay-copy reveal"><p class="eyebrow">THERE WHEN YOU NEED IT</p><h2 id="overlay-title">A little window.<br>A lot happening.</h2><p>Check in on your agents without leaving what you’re doing. Open an active thread, read the latest, or start something new.</p><div class="shortcut" aria-label="Command Shift Space"><kbd>⌘</kbd><kbd>⇧</kbd><kbd>Space</kbd></div><span class="shortcut-note">Your shortcut. Change it anytime.</span></div>
+        <div class="quick-preview reveal" id="quick-preview">
+          <div class="quick-heading"><img src="/favicon.svg" width="25" height="25" alt=""><strong>PandaCode</strong><span>Quick look</span><span data-icon="expand" set:html={icon("expand")}></span></div>
+          <div class="quick-reader" hidden><button class="quick-back" type="button"><span aria-hidden="true">←</span> Active agents</button><h3>A home for your ideas</h3><div class="quick-response"><span data-logo="claude" set:html={logo("claude")}></span><div><strong>Claude Code <small>Working</small></strong><p>The layout is taking shape. I’m adding the responsive styles and checking the smaller screens next.</p><div class="quick-tool"><span data-icon="check" set:html={icon("check")}></span> Updated 3 files</div></div></div></div>
+          <div class="quick-list"><div class="quick-prompt">What would you like to build?</div><div class="quick-compose-meta"><span data-icon="folder" set:html={icon("folder")}></span> meadow <span class="quick-model"><span data-logo="codex" set:html={logo("codex")}></span> Codex <span aria-hidden="true">⌄</span></span><span class="quick-send" aria-hidden="true">↑</span></div><div class="quick-section-label"><span class="live-dot"></span> Active agents <span>2</span></div><button type="button" class="quick-task"><span data-logo="claude" set:html={logo("claude")}></span><span><strong>A home for your ideas</strong><small>meadow · Adding the finishing touches</small></span><span aria-hidden="true">›</span></button><button type="button" class="quick-task"><span data-logo="codex" set:html={logo("codex")}></span><span><strong>Make it feel effortless</strong><small>meadow · Checking interactions</small></span><span aria-hidden="true">›</span></button></div>
+          <div class="quick-footer"><span>Click an agent to peek inside</span><span>esc</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="your-space" class="personalize section-width" aria-labelledby="space-title">
+      <div class="section-heading reveal"><p class="eyebrow">NATURALLY YOURS</p><h2 id="space-title">A change of scenery.<br>A fresh state of mind.</h2><p>Morning light. Mountain air. A quiet night.<br>21 original scenes follow your day—or stay just how you like.</p></div>
+      <div class="scenery-preview" id="scenery-preview" data-wallpaper="morning">
+        <picture aria-hidden="true"><source srcset="/assets/morning-bamboo-800.webp 800w, /assets/morning-bamboo-1600.webp 1600w" sizes="(max-width: 800px) 100vw, 1100px"><img id="scenery-image" src="/assets/morning-bamboo-1600.webp" width="1600" height="901" alt="" loading="lazy" decoding="async"></picture>
+        <div class="scenery-copy"><span class="scenery-greeting" id="scenery-greeting">A little room to breathe.</span><span class="scenery-subtitle" id="scenery-subtitle">Monday morning, made softer.</span></div>
+        <div class="scenery-composer"><span>What should we build today?</span><div><span data-logo="claude" set:html={logo("claude")}></span> Claude Code <span aria-hidden="true">⌄</span><span class="scenery-send" aria-hidden="true">↑</span></div></div>
+      </div>
+      <div class="wallpaper-controls" role="group" aria-label="Choose a scenery preview"><button type="button" data-wallpaper="morning" aria-pressed="true"><span class="swatch morning"></span>Morning</button><button type="button" data-wallpaper="afternoon" aria-pressed="false"><span class="swatch afternoon"></span>Daylight</button><button type="button" data-wallpaper="night" aria-pressed="false"><span class="swatch night"></span>After hours</button></div>
+    </section>
+
+    <section class="lightweight section-width" aria-labelledby="light-title">
+      <div class="light-copy reveal"><p class="eyebrow">ROOM FOR THE WORK THAT MATTERS</p><h2 id="light-title">Thoughtfully built.<br>Delightfully light.</h2><p>A small native foundation, with the heavier tools loaded only when you need them.</p></div>
+      <div class="light-facts"><div><span class="fact-symbol" data-icon="apple" set:html={icon("apple")}></span><strong>A native foundation.</strong><p>Built for macOS, Windows, and Linux.</p></div><div><span class="fact-symbol" data-icon="leaf" set:html={icon("leaf")}></span><strong>Quiet by design.</strong><p>No bundled Chromium. No always-on Node server.</p></div></div>
+    </section>
+
+    <OpenSource />
+    <Comparison />
+    <PrivacySection />
+
+    <section id="download" class="download-section" aria-labelledby="download-title">
+      <div class="fireflies" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <picture aria-hidden="true"><source srcset="/assets/twilight-lake-800.webp 800w, /assets/twilight-lake-1600.webp 1600w" sizes="100vw"><img src="/assets/twilight-lake-1600.webp" width="1600" height="901" alt="" loading="lazy" decoding="async"></picture>
+      <div class="download-content reveal"><img class="app-icon" src="/favicon.svg" width="80" height="80" alt="PandaCode app icon"><p class="eyebrow">MAKE SOMETHING GOOD</p><h2 id="download-title">Your next idea<br>has a home.</h2><p>Bring your agents. We’ll make a little space.</p><AlphaNotice id="download-alpha" /><a class="button" href={project.releases} target="_blank" rel="noopener noreferrer" data-download aria-describedby={distribution.isUnsignedPreview ? 'download-alpha download-distribution' : 'download-alpha'}><span data-icon="leaf" set:html={icon("leaf")}></span> Download PandaCode <span aria-hidden="true">↗</span></a><span class="download-version">Free · Open source · GitHub Releases</span><p class="platform-downloads" aria-label="Direct downloads">{platformDownloads.map(platform => <a href={platform.href} data-platform-download>{platform.label} <small>{platform.detail}</small></a>)}</p><p class="download-provider-note">Bring your own coding provider accounts. Their fees are separate.</p><DistributionNote id="download-distribution" /><a class="source-link" href={project.repo} target="_blank" rel="noopener noreferrer" data-source>View the source on GitHub <span aria-hidden="true">↗</span></a></div>
+    </section>
+    <section class="preview-notes section-width" id="preview-notes" aria-label="Release notes"><p><strong>Your workspace, your providers.</strong> PandaCode is free, open-source software under the <a class="inline-link" href="/license/">PandaCode License</a>, an MIT license that asks forks to credit PandaCode. Your coding provider subscriptions and model usage are separate. Builds for Apple silicon Macs, Windows x64, and Linux x64 are published on GitHub Releases, or you can build from source. Read how PandaCode handles your data in the <a class="inline-link" href="/privacy/">Privacy Policy</a>.</p><a href={project.issues} target="_blank" rel="noopener noreferrer">Report an issue or request a feature <span aria-hidden="true">↗</span></a></section>
+  </main>
+  <SiteFooter home />
+  <script>import '../scripts/main.js'; import '../scripts/motion';</script>
+</body>
+</html>

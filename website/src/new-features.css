@@ -1,0 +1,144 @@
+/* What's new: a bento of feature cards. Each dark scene matches the product preview;
+   steps appear as scripts/new-features.ts plays them. Without .motion-ready (no
+   JavaScript) or with reduced motion, every step is simply shown. */
+.new-features { padding-block: 40px 130px; }
+.new-features .section-heading { margin-bottom: 54px; }
+.nf-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.nf-card { position: relative; display: flex; flex-direction: column; min-width: 0; border-radius: 28px; background: linear-gradient(180deg, #fffffb, #f3f5ea); box-shadow: 0 0 0 1px #dce2d3, 0 18px 40px -26px #31452840; overflow: hidden; isolation: isolate; transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .4s; }
+.nf-card::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, -40%), #fff7c060, transparent 45%); opacity: 0; transition: opacity .3s; }
+.nf-card:hover::after { opacity: 1; }
+.nf-card:hover { transform: translateY(-4px); box-shadow: 0 0 0 1px #cfd8bf, 0 28px 60px -30px #31452866; }
+.nf-wide { grid-column: span 2; }
+.nf-visual { position: relative; height: 290px; margin: 10px 10px 0; border-radius: 20px; overflow: hidden; color: #eef2e6; background: #24372d; isolation: isolate; }
+.nf-visual::before { content: ''; position: absolute; inset: -20px; z-index: -1; background: linear-gradient(#17251bb8, #13271fd6), url('/assets/morning-bamboo-800.webp') center / cover; transform: scale(1.04); transition: transform 1.6s cubic-bezier(.2,.8,.2,1); }
+.nf-card:hover .nf-visual::before { transform: scale(1.1) translateY(-6px); }
+.nf-copy { padding: 26px 28px 30px; }
+.nf-copy h3 { margin: 14px 0 12px; font-size: clamp(24px, 2.2vw, 30px); line-height: 1.1; }
+.nf-copy p { color: var(--muted); font-size: 15px; line-height: 1.65; max-width: 520px; }
+.nf-copy small { display: block; margin-top: 6px; font-size: 11px; }
+
+/* Steps: hidden until played, but only when JavaScript is running the scenes. */
+.motion-ready .nf-card:not(.is-still) [data-step] { transition: opacity .45s, transform .55s cubic-bezier(.2,.9,.25,1.15), filter .45s; }
+.motion-ready .nf-card:not(.is-still) [data-step]:not(.on) { opacity: 0; transform: translateY(8px) scale(.97); filter: blur(3px); }
+
+/* Bots */
+.nf-chat { position: absolute; inset: 62px 20px 56px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; overflow: hidden; font-size: 12.5px; line-height: 1.5; -webkit-mask-image: linear-gradient(transparent, #000 22px); mask-image: linear-gradient(transparent, #000 22px); }
+.nf-chat > * { flex: none; }
+.nf-chat-head { position: absolute; top: 16px; left: 20px; right: 20px; display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid #ffffff14; }
+.nf-chat-head b { font-size: 13px; }
+.nf-chat-head small { color: #b4c2aa; font-size: 10.5px; }
+.nf-face { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #e6d88833; font-size: 13px; }
+.nf-msg { max-width: 76%; padding: 7px 11px; border-radius: 14px; }
+.nf-msg.me { align-self: flex-end; background: var(--yellow); color: #253220; border-bottom-right-radius: 4px; font-weight: 550; }
+.nf-msg.bot { align-self: flex-start; background: #ffffff14; border-bottom-left-radius: 4px; }
+.nf-chip { display: inline-block; margin-top: 4px; padding: 2px 8px; border-radius: 8px; background: #abd49533; color: #d8efc8; font-size: 11px; font-weight: 600; }
+.nf-typing { align-self: flex-start; display: inline-flex; gap: 3px; padding: 9px 11px; border-radius: 12px; background: #ffffff14; }
+.nf-typing i { width: 5px; height: 5px; border-radius: 50%; background: #c7d2bf; animation: nf-bounce 1s infinite ease-in-out; }
+.nf-typing i:nth-child(2) { animation-delay: .15s; } .nf-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes nf-bounce { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-3px); opacity: 1; } }
+.nf-card:not(.is-playing) .nf-typing { display: none; }
+.nf-channels { position: absolute; left: 20px; right: 20px; bottom: 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+.nf-channels span { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; border-radius: 99px; background: #ffffff12; font-size: 11px; }
+.nf-channels i { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #f2f5e8; font-style: normal; font-size: 9px; font-weight: 800; }
+.nf-channels .tg { color: #229ed9; } .nf-channels .sl { color: #7c3a78; } .nf-channels .dc { color: #5865f2; } .nf-channels .wa { color: #1ea952; } .nf-channels .web { color: #6b8358; }
+
+/* Agent teams */
+.nf-picker { position: absolute; top: 20px; left: 20px; right: 20px; display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 11px; background: #eff2e5; color: #2d422b; font-size: 12.5px; font-weight: 600; box-shadow: 0 8px 20px #0b23192b; }
+.nf-picker small { margin-left: 4px; font-weight: 450; color: #687268; font-size: 10.5px; }
+.nf-picker > span:last-child { margin-left: auto; }
+.nf-swatch { width: 16px; height: 16px; border-radius: 5px; background: linear-gradient(135deg, var(--yellow), #8bbf6a); }
+.nf-roster { position: absolute; top: 76px; left: 20px; right: 20px; display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; font-size: 12px; }
+.nf-roster li { display: flex; align-items: center; gap: 9px; padding: 8px 11px; border-radius: 10px; background: #e6d88824; box-shadow: inset 0 0 0 1px #e6d88833; }
+.nf-roster li em { margin-left: auto; font-style: normal; font-size: 10px; font-weight: 700; color: var(--yellow); }
+.nf-roster .provider-logo { width: 16px; height: 16px; }
+.nf-roster .provider-logo[data-provider=codex] { filter: invert(1); }
+.nf-roster li.nf-out { background: transparent; box-shadow: inset 0 0 0 1px #ffffff12; opacity: .45; }
+.nf-roster li.nf-out em { color: #b6c5ad; font-weight: 500; }
+
+/* Machines */
+.nf-vm { position: absolute; inset: 18px; border-radius: 12px; overflow: hidden; background: radial-gradient(circle at 75% 15%, #4f7a5b, #2a4433 60%, #1b2c22); box-shadow: inset 0 0 0 1px #ffffff14; }
+.nf-vm-bar { display: flex; justify-content: space-between; padding: 4px 10px; background: #0000004d; font-size: 10px; color: #cbd6c3; }
+.nf-term { position: absolute; left: 7%; right: 7%; top: 22%; bottom: 12%; padding: 10px 12px; border-radius: 9px; background: #0e1611f0; box-shadow: 0 12px 26px -10px #000c; font: 11px/1.65 ui-monospace, 'SF Mono', Menlo, monospace; color: #d8efc8; }
+.nf-term p { margin: 0; }
+.nf-prompt { color: #9fb894; }
+.nf-ok { color: var(--yellow); font-weight: 700; }
+.nf-cursor { position: absolute; left: 78%; top: 82%; width: 13px; height: 18px; background: #fff; clip-path: polygon(0 0, 0 100%, 28% 72%, 48% 100%, 62% 92%, 44% 66%, 100% 66%); filter: drop-shadow(0 1px 2px #000a); transition: left 1s cubic-bezier(.3,.8,.3,1), top 1s cubic-bezier(.3,.8,.3,1); }
+.nf-card.is-playing .nf-vm:has([data-step].on) .nf-cursor { left: 40%; top: 36%; }
+.nf-card.is-playing .nf-vm:has(.nf-ok.on) .nf-cursor { left: 78%; top: 82%; }
+
+/* Simulators */
+.nf-phone { position: absolute; left: 50%; top: 22px; width: 152px; height: 310px; margin-left: -76px; padding: 7px; border-radius: 32px; background: linear-gradient(145deg, #ff9b54, #e8672a 45%, #b9471a); box-shadow: inset 0 0 0 1.5px #ffffff59, inset 0 0 0 4px #1a1a1a, 0 22px 40px -14px #000a; transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.nf-card:hover .nf-phone { transform: rotate(-3deg) translateY(-6px); }
+.nf-phone-screen { position: relative; height: 100%; border-radius: 26px; padding: 30px 12px 12px; background: linear-gradient(#fff8f1, #ffe9d6); color: #2b1d12; }
+.nf-island { position: absolute; top: 8px; left: 50%; width: 48px; height: 14px; margin-left: -24px; border-radius: 99px; background: #111; }
+.nf-phone-title { margin: 6px 0 10px; font-size: 18px; font-weight: 750; letter-spacing: -.04em; }
+.nf-todo { position: relative; display: flex; align-items: center; gap: 7px; margin: 0 0 6px; padding: 8px; border-radius: 10px; background: #ffffffc0; font-size: 10.5px; font-weight: 600; }
+.nf-todo i { flex: none; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid currentColor; opacity: .5; transition: background .3s, border-color .3s, opacity .3s; }
+.nf-todo.on i, html:not(.motion-ready) .nf-todo[data-step] i, .nf-card.is-still .nf-todo[data-step] i { background: #6b8358; border-color: #6b8358; opacity: 1; }
+.nf-todo.on, html:not(.motion-ready) .nf-todo[data-step], .nf-card.is-still .nf-todo[data-step] { text-decoration: line-through; text-decoration-color: #2b1d1288; }
+/* Todos are always visible; their step only checks them, with a tap ripple. */
+.motion-ready .nf-card:not(.is-still) .nf-todo[data-step]:not(.on) { opacity: 1; transform: none; filter: none; }
+.nf-tap { position: absolute; left: 14px; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -6px; border-radius: 50%; background: #2b1d1240; opacity: 0; pointer-events: none; }
+.nf-card.is-playing .nf-todo.on .nf-tap { animation: nf-tap .55s ease-out; }
+@keyframes nf-tap { from { opacity: 1; transform: scale(.2); } to { opacity: 0; transform: scale(2); } }
+
+/* Deploy */
+.nf-deploy { position: absolute; inset: 20px; display: flex; flex-direction: column; gap: 12px; }
+.nf-targets { display: flex; gap: 6px; font-size: 11px; font-weight: 600; }
+.nf-targets span { padding: 5px 10px; border-radius: 9px; background: #ffffff12; color: #c6d1be; }
+.nf-targets span.on { background: #f2f5e8; color: #1f2b22; }
+.nf-progress { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.nf-progress i { height: 5px; border-radius: 9px; background: var(--yellow); transform-origin: left; }
+.motion-ready .nf-card:not(.is-still) .nf-progress i:not(.on) { opacity: .15; transform: scaleX(.2); filter: none; }
+.nf-log { margin: 0; padding: 10px 12px; border-radius: 10px; background: #0e1611d9; list-style: none; font: 11px/1.7 ui-monospace, 'SF Mono', Menlo, monospace; color: #d8efc8; }
+.nf-live { position: relative; display: flex; align-items: center; gap: 8px; align-self: flex-start; padding: 7px 12px 7px 7px; border-radius: 99px; background: #f2f5e8; color: #1f2b22; font: 600 12px/1 ui-monospace, 'SF Mono', Menlo, monospace; }
+.nf-live b { padding: 4px 8px; border-radius: 99px; background: #6b8358; color: #fff; font: 700 10.5px/1 -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+.nf-burst { position: absolute; left: 22px; top: 50%; }
+.nf-burst i { position: absolute; width: 6px; height: 6px; border-radius: 2px; background: var(--yellow); opacity: 0; }
+.nf-burst i:nth-child(2n) { background: #abd495; } .nf-burst i:nth-child(3n) { background: #f4a7a0; }
+.nf-card.is-playing .nf-live.on .nf-burst i { animation: nf-burst .9s cubic-bezier(.2,.8,.3,1) forwards; }
+.nf-burst i:nth-child(1) { --x: -40px; --y: -34px; } .nf-burst i:nth-child(2) { --x: 30px; --y: -40px; } .nf-burst i:nth-child(3) { --x: 60px; --y: -16px; } .nf-burst i:nth-child(4) { --x: -52px; --y: 6px; }
+.nf-burst i:nth-child(5) { --x: 74px; --y: 18px; } .nf-burst i:nth-child(6) { --x: -20px; --y: 34px; } .nf-burst i:nth-child(7) { --x: 22px; --y: 38px; } .nf-burst i:nth-child(8) { --x: 100px; --y: -28px; }
+@keyframes nf-burst { 0% { opacity: 1; transform: translate(0, 0) rotate(0); } 100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(200deg); } }
+
+/* Token saver: the reply shrinks with each level, and so does the meter. */
+.nf-saver { position: absolute; inset: 22px 24px; display: flex; flex-direction: column; gap: 14px; --meter: .15; }
+.nf-levels { display: inline-flex; align-self: flex-start; gap: 2px; padding: 3px; border-radius: 99px; background: #ffffff12; font-size: 11.5px; font-weight: 600; }
+.nf-levels span { padding: 5px 13px; border-radius: 99px; color: #c6d1be; transition: background .3s, color .3s; }
+.motion-ready .nf-card:not(.is-still) .nf-levels span:not(.on) { opacity: 1; transform: none; filter: none; }
+.nf-levels span.on, html:not(.motion-ready) .nf-levels span:last-child, .nf-card.is-still .nf-levels span:last-child { background: var(--yellow); color: #253220; }
+.nf-reply { position: relative; flex: 1; padding: 14px 16px; border-radius: 14px; background: #ffffff10; font-size: 14px; line-height: 1.6; }
+.nf-reply p { position: absolute; inset: 14px 16px; margin: 0; opacity: 0; transform: translateY(6px); filter: blur(4px); transition: opacity .5s, transform .6s cubic-bezier(.2,.8,.2,1), filter .5s; }
+.nf-saver[data-level="0"] .nf-r0, .nf-saver[data-level="1"] .nf-r1, .nf-saver[data-level="2"] .nf-r2, .nf-saver:not([data-level]) .nf-r3, .nf-saver[data-level="3"] .nf-r3 { opacity: 1; transform: none; filter: none; }
+.nf-meter { display: flex; align-items: center; gap: 12px; }
+.nf-bar { flex: 1; height: 8px; border-radius: 99px; background: #ffffff18; overflow: hidden; }
+.nf-bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #abd495, var(--yellow)); transform-origin: left; transform: scaleX(var(--meter)); transition: transform 1s cubic-bezier(.2,.9,.25,1.05); }
+.nf-count { min-width: 110px; font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Also new */
+.nf-also { padding: 28px; justify-content: center; }
+.nf-also ul { display: grid; gap: 18px; margin: 20px 0 0; padding: 0; list-style: none; }
+.nf-also li { display: flex; gap: 14px; align-items: flex-start; }
+.nf-also b { display: block; font-size: 15px; letter-spacing: -.02em; }
+.nf-also small { display: block; margin-top: 2px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.nf-also-icon { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 11px; background: #e8eadf; color: #577147; transition: transform .4s cubic-bezier(.2,.9,.25,1.4), background .3s; }
+.nf-also li:hover .nf-also-icon { transform: rotate(-8deg) scale(1.08); background: var(--yellow); }
+
+@media (max-width: 1100px) { .nf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nf-wide { grid-column: span 2; } }
+@media (max-width: 760px) {
+  .new-features { padding-block: 10px 80px; }
+  .new-features .section-heading { margin-bottom: 34px; }
+  .new-features .section-heading br { display: none; }
+  .nf-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .nf-wide { grid-column: auto; }
+  .nf-visual { height: 270px; }
+  .nf-copy { padding: 22px 22px 26px; }
+  .nf-chat { inset: 58px 14px 70px; font-size: 12px; }
+  .nf-chat-head { left: 14px; right: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .nf-card, .nf-visual::before, .nf-phone, .nf-also-icon { transition: none; } .nf-card:hover { transform: none; } .nf-typing i { animation: none; } }
+@media (prefers-contrast: more) { .nf-card { box-shadow: 0 0 0 1px #43503d; } }
+/* In the chat, unplayed messages take no room, so the conversation grows from the bottom. */
+.motion-ready .nf-card:not(.is-still) .nf-chat [data-step]:not(.on) { display: none; }
+.nf-card.is-playing .nf-chat .on { animation: nf-pop .5s cubic-bezier(.2,.9,.25,1.2); }
+@keyframes nf-pop { from { opacity: 0; transform: translateY(10px) scale(.96); } }

@@ -1,0 +1,102 @@
+---
+const rows = [
+  { label: 'Workspace', cells: [
+    { text: 'Native desktop app', note: 'macOS, Windows & Linux · Alpha preview' },
+    { text: 'Desktop, web & mobile', href: 'https://github.com/pingdotgg/t3code/blob/main/README.md' },
+    { text: 'Mac app & cloud workspaces', href: 'https://www.conductor.build/' },
+    { text: 'Terminal, CLI & SSH', note: 'macOS, Linux & Windows', href: 'https://herdr.dev/' },
+  ] },
+  { label: 'Coding harnesses', cells: [
+    { text: 'Claude Code, Codex, Kimi Code, OpenCode, GLM via Claude Code & Antigravity' },
+    { text: 'Claude Code, Codex, Antigravity, OpenCode, Cursor & Grok', href: 'https://t3.codes/' },
+    { text: 'Claude Code, Codex, Cursor & OpenCode', href: 'https://www.conductor.build/' },
+    { text: 'CLI agents including Claude Code, Codex, Kimi, OpenCode & Antigravity', href: 'https://herdr.dev/docs/agents/' },
+  ] },
+  { label: 'Parallel work', cells: [
+    { text: 'Concurrent tasks with optional per-thread Git worktrees' },
+    { text: 'Parallel threads with separate Git worktrees', href: 'https://github.com/pingdotgg/t3code/blob/main/docs/user/thread-sidebar.md' },
+    { text: 'Isolated workspaces with their own branches, files & terminals', href: 'https://www.conductor.build/docs' },
+    { text: 'Git worktrees grouped under the parent repository', href: 'https://herdr.dev/docs/cli-reference/#worktrees' },
+  ] },
+  { label: 'Agent coordination', cells: [
+    { text: 'Architect + up to 3 workers across harnesses', note: 'Named agent teams in the model picker, saved profiles, teammate messages & checkpoints' },
+    { text: 'Agents panel for following delegated subagent work', href: 'https://github.com/pingdotgg/t3code/blob/main/docs/user/thread-sidebar.md#inspect-agent-work' },
+    { text: 'Delegation, progress checks & follow-ups through Cloud API / MCP', note: 'Paid cloud plans · API / MCP beta', href: 'https://www.conductor.build/docs/api/mcp' },
+    { text: 'Start agents, send prompts & read results through CLI / socket API', href: 'https://herdr.dev/docs/agent-automation/' },
+  ] },
+  { label: 'Organization & review', cells: [
+    { text: 'Task board, turn diffs, linked pull requests, quick overlay & moodboards' },
+    { text: 'Threads, inline diffs & Git / pull-request actions', href: 'https://t3.codes/' },
+    { text: 'Workspaces, diffs, checks & pull-request workflow', href: 'https://www.conductor.build/docs/concepts/workflow' },
+    { text: 'Workspaces, tabs, terminal panes & agent status', href: 'https://herdr.dev/docs/quick-start/' },
+  ] },
+  { label: 'Price & license', cells: [
+    { text: 'Free', note: 'Open source · MIT-based · No account', href: 'https://github.com/aicodeking/pandacode' },
+    { text: 'Free', note: 'Open source · MIT', href: 'https://t3.codes/' },
+    { text: 'Free local tier', note: 'Pro $50/month · Teams $60/user/month', href: 'https://www.conductor.build/pricing' },
+    { text: 'Open-source runtime', note: 'Apache 2.0 · No paid runtime plan listed', href: 'https://github.com/herdrdev/herdr' },
+  ] },
+];
+---
+<section id="comparison" class="comparison section-width" aria-labelledby="comparison-title">
+  <div class="comparison-heading reveal">
+    <p class="eyebrow">YOUR AGENTS. YOUR WAY.</p>
+    <h2 id="comparison-title">Find your kind of flow.</h2>
+    <p>Different ways to work with coding agents. A closer look at the workflows, platforms, price and licenses.</p>
+  </div>
+  <p id="comparison-scroll-hint" class="scroll-hint">Scroll sideways to compare all four <span aria-hidden="true">↔</span></p>
+  <div class="comparison-scroll" tabindex="0" role="region" aria-label="Product comparison" aria-describedby="comparison-scroll-hint">
+    <table>
+      <caption>How PandaCode compares with T3 Code, Conductor, and Herdr</caption>
+      <colgroup><col class="feature-column"><col class="pandacode-column"><col><col><col></colgroup>
+      <thead><tr>
+        <th scope="col">Feature</th>
+        <th scope="col"><span class="product-name">PandaCode</span><span class="product-note">Alpha preview</span></th>
+        <th scope="col"><a class="product-name" href="https://t3.codes/" target="_blank" rel="noopener noreferrer">T3 Code <span aria-hidden="true">↗</span></a></th>
+        <th scope="col"><a class="product-name" href="https://www.conductor.build/" target="_blank" rel="noopener noreferrer">Conductor <span aria-hidden="true">↗</span></a></th>
+        <th scope="col"><a class="product-name" href="https://herdr.dev/" target="_blank" rel="noopener noreferrer">Herdr <span aria-hidden="true">↗</span></a></th>
+      </tr></thead>
+      <tbody>{rows.map(row => <tr><th scope="row">{row.label}</th>{row.cells.map(cell => <td>
+        {cell.href ? <a href={cell.href} target="_blank" rel="noopener noreferrer">{cell.text}</a> : <span>{cell.text}</span>}
+        {cell.note && <small>{cell.note}</small>}
+      </td>)}</tr>)}</tbody>
+    </table>
+  </div>
+  <p class="comparison-note">Checked <time datetime="2026-09-18">September 18, 2026</time> against linked official sources. Features, prices and licenses can change. AI provider fees are separate. This is a workflow comparison, not a speed or memory benchmark.</p>
+</section>
+
+<style>
+  .comparison { padding-block: 30px 100px; }
+  .comparison-heading { max-width: 740px; margin: 0 auto 48px; text-align: center; }
+  .comparison-heading > p:last-child { max-width: 520px; margin: 24px auto 0; color: var(--muted); font-size: 17px; }
+  .comparison-scroll { overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid #dce2d3; border-radius: 20px; background: #fffefa; scrollbar-color: #a6b398 #edf0e6; }
+  table { width: 100%; min-width: 1050px; border-collapse: separate; border-spacing: 0; table-layout: fixed; text-align: left; font-size: 13px; line-height: 1.6; }
+  caption { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .feature-column { width: 15%; }
+  .pandacode-column { background: #f0f3df; }
+  th, td { padding: 23px 20px; vertical-align: top; border-bottom: 1px solid #dce2d3; overflow-wrap: break-word; }
+  thead th { padding-top: 28px; padding-bottom: 26px; vertical-align: middle; }
+  thead th:first-child { color: var(--muted); font-size: 12px; font-weight: 500; }
+  tbody th { font-size: 12px; font-weight: 600; color: #4f6046; }
+  tr > :nth-child(2) { background: #f0f3df; }
+  tbody tr:last-child > * { border-bottom: 0; }
+  td { color: #3d4e37; }
+  td a { text-decoration: underline; text-decoration-color: #83937566; text-underline-offset: 3px; }
+  td a:hover { text-decoration-color: currentColor; }
+  .product-name { font-size: 20px; font-weight: 600; letter-spacing: -.035em; white-space: nowrap; }
+  .product-name span { font-size: 12px; margin-left: 3px; color: #6c7b5f; }
+  .product-note, small { display: block; font-size: 11px; line-height: 1.6; color: #617153; margin-top: 6px; }
+  .comparison-note { max-width: 840px; margin-top: 20px; color: #63715a; font-size: 12px; line-height: 1.7; }
+  .scroll-hint { display: none; margin-bottom: 12px; font-size: 12px; color: #63715a; }
+  .scroll-hint span { margin-left: 8px; }
+  @media (max-width: 1160px) { .scroll-hint { display: block; } }
+  @media (max-width: 760px) {
+    .comparison { padding-block: 0 70px; }
+    .comparison-heading { text-align: left; margin-bottom: 30px; }
+    .comparison-heading > p:last-child { font-size: 16px; margin-inline: 0; }
+    .comparison-scroll { border-radius: 14px; }
+    table { min-width: 970px; }
+    th, td { padding: 20px 16px; }
+    tr > :first-child { position: sticky; left: 0; z-index: 1; background: #fffefa; box-shadow: 1px 0 #dce2d3; }
+  }
+</style>

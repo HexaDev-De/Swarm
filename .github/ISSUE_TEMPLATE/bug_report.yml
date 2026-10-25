@@ -1,0 +1,63 @@
+name: Bug report
+description: Something in PandaCode does not work as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please search existing issues first.
+        For security problems, do not file an issue: see SECURITY.md.
+        Remove API keys, tokens and private project content from anything you paste.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open a project
+        2. Start a task with Claude Code
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PandaCode version
+      description: Settings → About shows the version and can copy it with your OS and architecture.
+      placeholder: 0.3.0
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Windows
+        - Linux
+    validations:
+      required: true
+  - type: input
+    id: os-version
+    attributes:
+      label: OS version and architecture
+      placeholder: macOS 26.1 arm64 / Windows 11 x64 / Ubuntu 24.04 x86_64 (X11 or Wayland)
+    validations:
+      required: true
+  - type: input
+    id: harness
+    attributes:
+      label: Harness and version (if relevant)
+      placeholder: Claude Code 2.x, Codex 0.x, Kimi Code 2.x, ...
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Error messages, terminal output or screenshots.
+      render: text

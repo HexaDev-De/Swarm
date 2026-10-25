@@ -1,0 +1,63 @@
+name: "Release Swarm v0.1.0"
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest' # Apple Silicon / ARM64
+            target: 'aarch64-apple-darwin'
+            bundle: 'dmg'
+          - platform: 'windows-latest' # Windows x64
+            target: 'x86_64-pc-windows-msvc'
+            bundle: 'nsis'
+          - platform: 'ubuntu-22.04' # Linux x64
+            target: 'x86_64-unknown-linux-gnu'
+            bundle: 'appimage'
+
+    runs-on: ${{ matrix.platform }}
+    env:
+      NO_STRIP: "true"
+      APPIMAGE_EXTRACT_AND_RUN: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Rust Stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install Linux Dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf libssl-dev
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Tauri Frontend & Rust Binary
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: 'Swarm v__VERSION__'
+          releaseBody: 'See release notes in releases/__VERSION__.md or README.md. Download the native desktop client for macOS, Windows, or Linux below.'
+          releaseDraft: false
+          prerelease: false
+          args: --target ${{ matrix.target }}

@@ -1,0 +1,75 @@
+/* Bot settings: the Bots window and the single-bot modal share one tabbed layout. A header
+   carries the bot's identity, live state and actions; sections are compact tabs over
+   quiet cards at the app's field size. Conversations themselves open as ordinary tasks. */
+.bots{--bots-inset:color-mix(in srgb,var(--text) 4%,transparent);--bots-hover:color-mix(in srgb,var(--text) 6%,transparent);--bots-card:color-mix(in srgb,var(--panel) 60%,transparent)}
+dialog.bot-settings-dialog{width:min(720px,calc(100vw - 32px));max-height:88dvh}
+.bots.bots-single{display:block;min-height:min(520px,70dvh)}
+.bots-detail{display:flex;flex-direction:column;gap:14px;min-width:0}
+.bots-detail>.bots-tabs{margin:0}
+
+/* Header */
+.bp-bar{display:flex;align-items:center;gap:12px;max-width:830px;min-height:46px;margin:0 auto}
+.bp-ring{width:42px;height:42px}
+.bp-ring>.bot-avatar{width:36px;height:36px;font-size:1.1rem}
+.bp-bar.is-working .bots-ring::before{opacity:1}
+.bp-bar.is-paused .bots-ring::before{opacity:.12;filter:grayscale(1)}
+.bp-bar.is-paused .bot-avatar{filter:grayscale(.7);opacity:.75}
+@media(prefers-reduced-motion:no-preference){.bp-bar.is-working .bots-ring::before{animation:bots-spin 2.4s linear infinite}}
+.bp-id{flex:1;min-width:0}
+.bp-name-row{display:flex;align-items:center;gap:8px;min-width:0}
+.bp-name{margin:0;font-size:1.07rem;font-weight:600;letter-spacing:-.014em;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp-state{flex:none;padding:1px 8px;border-radius:999px;font-size:.7rem;font-weight:550;background:var(--bots-inset);color:var(--muted)}
+.bp-state[data-state=working]{background:color-mix(in srgb,var(--success) 16%,transparent);color:var(--success)}
+.bp-state[data-state=paused]{background:var(--accent-dim);color:var(--accent-ink)}
+.bp-meta{margin:2px 0 0;font-size:.8rem;line-height:1.35;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp-meta i{font-style:normal;margin:0 7px;opacity:.55}
+.bp-actions{display:flex;align-items:center;gap:2px;flex:none}
+.bp-actions .icon-button{width:32px;height:32px;border-radius:4px;color:var(--muted)}
+.bp-actions .icon-button:hover,.bp-actions .icon-button[aria-pressed=true],.bp-actions .icon-button[aria-expanded=true]{background:var(--bots-hover);color:var(--text)}
+.bp-actions .icon-button .icon{width:16px;height:16px}
+.bp-more{position:relative;display:flex}
+.bp-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:30;display:flex;flex-direction:column;min-width:260px;padding:5px;border-radius:5px;border:.5px solid var(--glass-edge,var(--border));background:linear-gradient(180deg,var(--glass-warm,var(--panel)),var(--glass-tint,var(--panel)));backdrop-filter:blur(30px) saturate(1.6);-webkit-backdrop-filter:blur(30px) saturate(1.6);box-shadow:0 0 0 .5px var(--glass-ring,transparent),0 16px 40px -14px var(--glass-shadow-deep,rgb(0 0 0 / .3))}
+
+.bp-menu>button{display:grid;grid-template-columns:16px minmax(0,1fr);column-gap:10px;align-items:center;padding:8px 10px;border-radius:3px;text-align:left;font-size:.86rem;color:var(--text)}
+.bp-menu>button:hover,.bp-menu>button:focus-visible{background:var(--glass-fill-hover,var(--raised))}
+.bp-menu>button .icon{width:15px;height:15px;color:var(--muted)}
+.bp-menu>button small{grid-column:2;font-size:.75rem;color:var(--muted)}
+.bp-menu>button.danger,.bp-menu>button.danger .icon{color:var(--danger)}
+.bp-open{min-height:32px;padding:5px 12px;margin-right:4px;font-size:.84rem;gap:6px}
+.bp-open .icon{width:15px;height:15px}
+.bots-detail>:is(.bots-confirm,.bots-error,.bots-banner){margin:0}
+
+/* Sections */
+.bots-detail .bots-tabs{gap:0;margin:0;padding:3px;border-radius:4px;background:var(--bots-inset)}
+.bots-detail .bots-tabs>button{flex:1 1 auto;gap:3px;min-height:28px;padding:3px 6px;border-radius:3px;font-size:.78rem}
+.bots-detail .bots-tabs>.segment-thumb{border-radius:3px}
+.workspace[data-wallpaper] .bots-detail .bots-tabs>.segment-thumb{background:color-mix(in srgb,var(--text) 12%,transparent);box-shadow:none}
+.bots-count{margin-left:2px;font-size:.7rem;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+.bots-detail .bots-panel{gap:14px}
+.bots-detail .bots-panel h4{margin:6px 0 -4px;font-size:.74rem;font-weight:550;text-transform:none;letter-spacing:0}
+.bots-detail .bots-lede{font-size:.82rem;line-height:1.55}
+.bots-detail :is(input:not([type=checkbox]),select,textarea){font-size:.86rem;background:var(--bots-inset);border-color:var(--bots-line)}
+.bots-detail :is(input:not([type=checkbox]),select){min-height:36px;padding:7px 11px}
+.bots-detail .bots-field>span{font-size:.78rem;justify-content:flex-start}
+.bots-detail .bots-field>span>.info-mark{margin-left:0}
+.bots-detail .bots-inline-form{gap:6px}
+.bots-detail .bots-inline-form :is(.secondary-button,.primary-button){min-height:36px;padding:6px 12px;font-size:.82rem}
+.bots-detail .bots-inline-form select{flex:none;width:auto}
+.bots-detail .bots-grid:not(.three){grid-template-columns:64px minmax(0,1fr)}
+.bots-detail .dialog-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:2px}
+.bots-detail .dialog-footer :is(.secondary-button,.primary-button){min-height:34px;padding:6px 14px;font-size:.84rem}
+.bots-detail .bots-items{border-color:var(--bots-line);background:var(--bots-card)}
+.bots-detail .bots-items>li{gap:6px;padding:10px 8px 10px 12px;border-color:var(--bots-line)}
+.bots-detail .bots-item-main{gap:2px;font-size:.86rem;line-height:1.45}
+.bots-detail .bots-item-main>small{font-size:.75rem}
+.bots-detail .bots-items .icon-button{width:28px;height:28px;border-radius:3px;color:var(--muted)}
+.bots-detail .bots-items .icon-button:hover{background:var(--bots-hover);color:var(--text)}
+.bots-detail .bots-items .icon-button .icon{width:14px;height:14px}
+.bots-detail .bots-empty-note{margin:0;padding:22px 14px;border:1px dashed var(--bots-line);border-radius:5px;text-align:center;font-size:.82rem;line-height:1.5}
+.bots-detail .bots-connect{padding:14px;background:var(--bots-card);border-color:var(--bots-line)}
+.bots-detail .bots-guide,.bots-detail .bots-warning{margin-left:0}
+.bots-detail .bots-activity>li{padding:9px 2px;font-size:.84rem;border-color:var(--bots-line)}
+
+@media(max-width:640px){.bp-open span{display:none}.bots-detail .bots-tabs>button{font-size:.74rem;padding:3px 4px}}
+@media(prefers-reduced-transparency:reduce),(prefers-contrast:more){.bp-menu{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--panel)}}
+.bots-detail .bp-bar{max-width:none;margin:0}

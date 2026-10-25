@@ -1,0 +1,99 @@
+---
+/* Privacy policy. Every statement here mirrors what the app (src-tauri) and this static
+ * site actually do; change this page with them. */
+import Page from '../layouts/Page.astro';
+import { project } from '../lib/distribution';
+const updated = { iso: '2026-10-17', label: 'October 17, 2026' };
+const sections = [
+  ['overview', 'The short version'],
+  ['app', 'The desktop app'],
+  ['automatic', 'Automatic requests'],
+  ['providers', 'Services you choose'],
+  ['website', 'This website'],
+  ['children', 'Children'],
+  ['changes', 'Changes to this policy'],
+  ['contact', 'Contact'],
+] as const;
+---
+<Page title="Privacy Policy" current="privacy" eyebrow="YOUR WORK. YOUR BUSINESS."
+  heading="Privacy, plainly put."
+  description="PandaCode collects nothing: no account, no license checks, no telemetry, no analytics, no crash reports and no PandaCode servers. Your work stays on your computer."
+  lede="PandaCode is free, open-source software that runs on your computer. We don’t run servers for it, so there is nowhere for your data to go. Here is exactly what the app and this website do.">
+  <Fragment slot="hero">
+    <div class="legal-summary page-rise">
+      <div><b>We collect nothing.</b><span>No account, no license checks and no PandaCode servers.</span></div>
+      <div><b>No telemetry.</b><span>No analytics, usage tracking or crash reports. None.</span></div>
+      <div><b>Open to inspect.</b><span>Every line is on GitHub, so you can check all of this yourself.</span></div>
+    </div>
+    <p class="legal-updated page-rise">Last updated <time datetime={updated.iso}>{updated.label}</time></p>
+  </Fragment>
+
+  <div class="legal-layout section-width">
+    <nav class="legal-toc" aria-label="On this page"><p>ON THIS PAGE</p><ol>{sections.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}</ol></nav>
+    <article class="legal-prose">
+      <section id="overview" aria-labelledby="overview-title">
+        <h2 id="overview-title">The short version</h2>
+        <ul>
+          <li><strong>PandaCode collects nothing.</strong> There are no accounts, no license checks, no telemetry, no analytics, no crash reports and no PandaCode servers.</li>
+          <li>Your projects, conversations, tasks, bots, memories and settings are stored <strong>on your device</strong>. We never receive a copy.</li>
+          <li>The app talks only to the services <strong>you choose</strong>, directly from your computer, plus a few automatic requests that carry no personal data.</li>
+          <li>This website is static. It sets no cookies, runs no analytics and loads nothing from other companies.</li>
+        </ul>
+      </section>
+
+      <section id="app" aria-labelledby="app-title">
+        <h2 id="app-title">The desktop app</h2>
+        <p>PandaCode keeps its data in your operating system’s application data folder: a local database with your projects, conversations, tasks, board, team settings, bots and their memories, and usage figures, plus cached files such as screenshots you attach. Passwords, API keys, bot tokens and cloud credentials you enter are kept in your operating system’s secure store (Keychain on macOS, Credential Manager on Windows, Secret Service on Linux).</p>
+        <p>None of this leaves your computer unless a service you use needs it (see <a href="#providers">Services you choose</a>). Uninstalling the app and deleting its data folder removes it.</p>
+      </section>
+
+      <section id="automatic" aria-labelledby="automatic-title">
+        <h2 id="automatic-title">Automatic requests</h2>
+        <p>The app makes a few requests on its own. They carry no content from your work and no identifier for you, only what any internet request includes, such as your IP address:</p>
+        <ul>
+          <li><strong>Agent version checks</strong>, about every 6 hours, so PandaCode can tell you when your coding agents have updates: Homebrew (formulae.brew.sh), Anthropic (downloads.claude.ai), GitHub (api.github.com) and Kimi (cdn.kimi.com).</li>
+          <li><strong>PandaCode’s own updates</strong>, at launch and about every 6 hours: the latest release’s update manifest on GitHub (github.com). Updates are signed and verified before they install. Turn this off in Settings → About.</li>
+          <li><strong>A public model price list</strong> from GitHub (raw.githubusercontent.com), at most once a day, to estimate costs.</li>
+        </ul>
+        <p>If you open the usage panel, the app asks your providers for your usage limits with the sign-in those tools already saved on your computer. These requests go straight to those companies. Links you click open in your browser or in the built-in browser, and those websites make their own connections.</p>
+      </section>
+
+      <section id="providers" aria-labelledby="providers-title">
+        <h2 id="providers-title">Services you choose</h2>
+        <p>PandaCode is a workspace for tools you bring. When you use one, the app sends it what the work needs, directly from your computer, under your own account with that service and its privacy policy.</p>
+        <ul>
+          <li><strong>Coding agents and model providers</strong>, such as Claude Code, Codex, Kimi Code, OpenCode, Antigravity, Grok, GLM and MiMo, receive your prompts, the files and context they read, attachments and tool output.</li>
+          <li><strong>GitHub</strong>, through the <code>gh</code> command-line tool you sign in to, when you link pull requests or use GitHub features.</li>
+          <li><strong>Bots</strong> run on your computer. Messages you exchange through Telegram, Slack, Discord or WhatsApp pass through those platforms. Web chat is served from your own computer.</li>
+          <li><strong>Virtual machines and cloud sandboxes.</strong> Local VMs run on your Mac. Daytona, Cloudflare and AWS sandboxes run in your own accounts and receive the commands, files and screen interactions you or your agents send.</li>
+          <li><strong>Deploys</strong> to Vercel, Cloudflare or AWS run their command-line tools in your project with your credentials and upload what you deploy.</li>
+          <li><strong>Jev</strong> (optional, off by default): decision assistance sends selected task excerpts, rules and saved diffs to TypeSafe; browser testing sends test goals and visible page content to TypeSafe and your configured text model provider.</li>
+          <li><strong>Downloads you start</strong>, such as VS Code themes from Open VSX, or Tart and other tools from GitHub.</li>
+        </ul>
+        <p class="callout">Agents act with the permissions you give them and can send your data to other services as part of a task. Review what you allow, especially with full access.</p>
+      </section>
+
+      <section id="website" aria-labelledby="website-title">
+        <h2 id="website-title">This website</h2>
+        <p>This website is static. It has no cookies, analytics, advertising, social widgets, remote fonts or tracking pixels, and it loads nothing from other companies. Downloads come from GitHub Releases, where GitHub’s own privacy statement applies.</p>
+        <p>Like any website, our web host may keep standard server logs, such as IP addresses, browser details and the pages requested, to keep the site running and secure. We don’t use them to identify or track you.</p>
+      </section>
+
+      <section id="children" aria-labelledby="children-title">
+        <h2 id="children-title">Children</h2>
+        <p>PandaCode is a developer tool and isn’t directed to children. Since we collect nothing, we hold no information about anyone, children included.</p>
+      </section>
+
+      <section id="changes" aria-labelledby="changes-title">
+        <h2 id="changes-title">Changes to this policy</h2>
+        <p>We’ll update this page if PandaCode changes and show the date of the last update at the top. Because PandaCode is open source, every change to the app is public on GitHub.</p>
+      </section>
+
+      <section id="contact" aria-labelledby="contact-title">
+        <h2 id="contact-title">Contact</h2>
+        <p>Questions about privacy? Open an issue in <a href={project.issues} target="_blank" rel="noopener noreferrer">GitHub issues</a>. To report a security problem privately, follow our <a href={project.security} target="_blank" rel="noopener noreferrer">security policy</a> (SECURITY.md in the repository).</p>
+        <p>See also the <a href="/license/">PandaCode License</a>.</p>
+      </section>
+    </article>
+  </div>
+</Page>

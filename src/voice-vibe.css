@@ -1,0 +1,49 @@
+.voice-vibe-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fg-dim, #94a3b8);
+  cursor: pointer;
+  transition: all 120ms ease;
+  position: relative;
+}
+
+.voice-vibe-btn:hover {
+  color: var(--fg, #f8fafc);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.voice-vibe-btn.recording {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  animation: voice-pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes voice-pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { transform: scale(1.08); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0); }
+}
+
+.voice-wave-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 6px;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.voice-wave-canvas {
+  width: 56px;
+  height: 18px;
+  display: block;
+}

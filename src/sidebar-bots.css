@@ -1,0 +1,47 @@
+/* The bottom bar that switches the sidebar between tasks and bots. */
+.sidebar-bots{flex:none;padding:6px 8px 0}
+.sidebar-bots-bar{display:flex;align-items:center;gap:9px;width:100%;height:34px;padding:0 10px;border-radius:4px;color:var(--text);font-size:.84rem;font-weight:550;text-align:left}
+.sidebar-bots-bar:hover{background:var(--raised)}
+.sidebar-bots-bar[aria-pressed="true"]{background:rgb(var(--accent-rgb) / .22)}
+.sidebar-bots-bar>.icon{width:16px;height:16px;flex:none}
+.sidebar-bots-bar>.icon:last-child{width:12px;height:12px;color:var(--muted);transform:rotate(-90deg)}
+.sidebar-bots-bar[aria-pressed="true"]>.icon:last-child{transform:rotate(90deg)}
+.sidebar-bots-bar small{margin-left:auto;color:var(--muted);font-size:.74rem;font-weight:500;font-variant-numeric:tabular-nums}
+.sidebar-bots-unread{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+
+/* In the Bots view the task list, its actions and filters give way to the bots. */
+.sidebar.bots-view :is(.sidebar-actions,.sidebar-projects,.navigation,.sidebar-note){display:none}
+.bots-panel{display:none}
+.sidebar.bots-view .bots-panel{display:flex;flex-direction:column;flex:1;min-height:0}
+.bots-panel-head{display:flex;align-items:center;gap:6px;padding:6px 10px 10px 14px}
+.bots-panel-search{display:flex;align-items:center;gap:8px;flex:1;min-width:0;padding:0 4px;border-bottom:1px solid var(--border);color:var(--muted)}
+.bots-panel-search:focus-within{border-bottom-color:var(--focus)}
+.bots-panel-search>.icon{width:13px;height:13px;flex:none}
+.bots-panel-search input{flex:1;min-width:0;padding:6px 0;border:0;border-radius:0;background:none;box-shadow:none;font-size:.82rem;color:var(--text)}
+.bots-panel-search input:focus{border:0;box-shadow:none}
+.bots-panel-search input::-webkit-search-cancel-button{display:none}
+.bots-panel-head>.icon-button{width:28px;height:28px;flex:none;color:var(--muted)}
+.bots-panel-head>.icon-button:hover{color:var(--text)}
+.bots-panel-head>.icon-button .icon{width:15px;height:15px}
+.bots-panel-list{display:flex;flex-direction:column;gap:2px;flex:1;min-height:0;overflow-y:auto;padding:0 8px 12px}
+.bots-panel-empty{margin:12px 10px;color:var(--muted);font-size:.8rem}
+
+/* One row per bot: avatar, name and time, then the latest message. */
+.bot-card{position:relative;border-radius:5px}
+.bot-row.bot-card:hover{background:var(--raised)}
+.bot-row.bot-card.selected{background:rgb(var(--accent-rgb) / .22)}
+.bot-row.bot-card .bot-row-open{display:flex;align-items:center;gap:11px;width:100%;height:auto;min-height:58px;padding:8px 34px 8px 8px;border-radius:5px;color:var(--text);text-align:left}
+.bot-card-avatar{position:relative;flex:none}
+.bot-card-face{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgb(255 255 255 / .28),transparent 55%),var(--bot-color);color:#fff;font-size:1.05rem;font-weight:650;line-height:1;text-shadow:0 1px 1px rgb(0 0 0 / .18)}
+.bot-card.paused .bot-card-face{filter:grayscale(.85);opacity:.6}
+.bot-card-working{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--sidebar)}
+.bot-card-text{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.bot-card-head{display:flex;align-items:baseline;gap:8px;min-width:0}
+.bot-card .bot-row-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.86rem;font-weight:600}
+.bot-card-head time{flex:none;color:var(--muted);font-size:.72rem;font-variant-numeric:tabular-nums}
+.bot-card-preview{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:.78rem}
+.bot-card.paused .bot-card-preview{font-style:italic}
+.bot-card-unread{position:absolute;right:14px;top:50%;width:8px;height:8px;margin-top:4px;border-radius:50%;background:var(--accent)}
+.bot-card .bot-row-settings{top:50%;right:6px;transform:translateY(-50%)}
+.bot-card:hover .bot-card-unread,.bot-card:focus-within .bot-card-unread{opacity:0}
+@media(prefers-contrast:more){.bot-card.selected,.sidebar-bots-bar[aria-pressed="true"]{outline:1px solid var(--focus);outline-offset:-1px}}

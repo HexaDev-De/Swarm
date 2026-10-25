@@ -1,0 +1,65 @@
+---
+/* The PandaCode License (MIT plus an attribution requirement for forks), with a plain-language summary. Keep the
+ * full text identical to LICENSE in the repository root. */
+import Page from '../layouts/Page.astro';
+import { project } from '../lib/distribution';
+const sections = [
+  ['summary', 'In plain words'],
+  ['text', 'The PandaCode License'],
+  ['agents', 'Your agents, your permissions'],
+  ['contribute', 'Contributing'],
+] as const;
+---
+<Page title="License" current="license" eyebrow="FREE TO USE. OPEN TO ALL."
+  heading="The PandaCode License."
+  description="PandaCode is free, open-source software under the PandaCode License, an MIT license that asks forks to credit PandaCode. Use, copy, modify and share it; it comes with no warranty."
+  lede="PandaCode is free and open source under the MIT License with one addition: if you release or sell a fork, say where it came from.">
+  <Fragment slot="hero">
+    <div class="legal-summary page-rise">
+      <div><b>Use it for anything.</b><span>Personal, commercial, at work or for fun. No fee, no account.</span></div>
+      <div><b>Fork it, with credit.</b><span>Public or commercial forks say “This is a fork of PandaCode” and link back.</span></div>
+      <div><b>Provided as is.</b><span>No warranty. You’re responsible for how you use it.</span></div>
+    </div>
+  </Fragment>
+
+  <div class="legal-layout section-width">
+    <nav class="legal-toc" aria-label="On this page"><p>ON THIS PAGE</p><ol>{sections.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}</ol></nav>
+    <article class="legal-prose">
+      <section id="summary" aria-labelledby="summary-title">
+        <h2 id="summary-title">In plain words</h2>
+        <ul>
+          <li>You may <strong>use, copy, modify, merge, publish, distribute, sublicense and sell</strong> copies of PandaCode.</li>
+          <li>Include the copyright notice and the license text in all copies or substantial portions of the software.</li>
+          <li>If you <strong>release a fork publicly or use one commercially</strong>, state “This is a fork of PandaCode” with a link to <a href={project.repo} target="_blank" rel="noopener noreferrer">github.com/aicodeking/pandacode</a>, in its README or main docs and somewhere its users can see, like an About screen, website or store listing.</li>
+          <li>Simply using PandaCode, at home or at work, needs no credit.</li>
+          <li>PandaCode is provided <strong>“as is”, without warranty of any kind</strong>. The authors aren’t liable for any claim, damages or other liability arising from it.</li>
+        </ul>
+        <p>This summary is for convenience. The license text below is what applies.</p>
+      </section>
+
+      <section id="text" aria-labelledby="text-title">
+        <h2 id="text-title">The PandaCode License</h2>
+        <div class="license-text">
+          <p>PandaCode License (MIT License with an attribution requirement)</p>
+          <p>Copyright (c) 2026 PandaCode contributors</p>
+          <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+          <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+          <p>If a modified version of the Software, or any work based on it (a “fork”), is used commercially or released publicly in any form (including as source code, a binary, an app, a hosted service or a website), the fork must state “This is a fork of PandaCode” together with a link to https://github.com/aicodeking/pandacode. The statement must appear in the fork’s README or main documentation, and in a place its users can readily see, such as its About screen, website or store listing.</p>
+          <p class="caps">THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+        </div>
+      </section>
+
+      <section id="agents" aria-labelledby="agents-title">
+        <h2 id="agents-title">Your agents, your permissions</h2>
+        <p>PandaCode runs coding agents, bots, virtual machines, cloud sandboxes and deploys on your behalf. They act with the permissions you grant: they can read and change files, run commands, spend money with your providers and send data to other services as part of a task.</p>
+        <p class="callout">Review what you allow, especially with full access, keep backups, and check changes before you ship them. Third-party agents, models and services have their own terms, which apply when you use them.</p>
+      </section>
+
+      <section id="contribute" aria-labelledby="contribute-title">
+        <h2 id="contribute-title">Contributing</h2>
+        <p>The source lives at <a href={project.repo} target="_blank" rel="noopener noreferrer">github.com/aicodeking/pandacode</a>. Bugs, ideas and pull requests are welcome in <a href={project.issues} target="_blank" rel="noopener noreferrer">GitHub issues</a>. Unless you say otherwise, contributions you submit are licensed under the same PandaCode License.</p>
+        <p>See also the <a href="/privacy/">Privacy Policy</a>.</p>
+      </section>
+    </article>
+  </div>
+</Page>

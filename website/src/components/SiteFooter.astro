@@ -1,0 +1,18 @@
+---
+/* The site footer, shared by the landing page and the reading pages. */
+import { project } from '../lib/distribution';
+interface Props { home?: boolean }
+const { home = false } = Astro.props;
+---
+<footer class="footer section-width">
+  <a class="wordmark" href={home ? '#' : '/'}><img src="/favicon.svg" width="24" height="24" alt="">PandaCode</a>
+  <p>A calmer place to build. Free and open source.</p>
+  <nav class="footer-links" aria-label="Site">
+    <a href="/changelog/">Changelog</a>
+    <a href="/privacy/">Privacy</a>
+    <a href="/license/">License</a>
+    <a href={project.repo} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+    <a href={project.issues} target="_blank" rel="noopener noreferrer">Support <span aria-hidden="true">↗</span></a>
+  </nav>
+  <a href={home ? '#hero-title' : '#main'}>Back to the top <span aria-hidden="true">↑</span></a>
+</footer>

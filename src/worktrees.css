@@ -1,0 +1,51 @@
+/* The context bar names the checkout on every task; the branch chip is its one menu. */
+/* One line at any width: names shorten with an ellipsis and the PR/issue chip keeps its size. */
+.composer-context{flex-wrap:nowrap}
+.composer-context>.link-chip{flex-shrink:0}
+.composer-context .composer-project>span{min-width:3ch}
+.composer-area{container:composer/inline-size}
+@container composer (max-width:560px){.composer-context .composer-local{display:none}.composer-context.composer-context-compact{gap:10px}.composer-context .branch-chip{max-width:none}}
+.composer-context-compact{min-height:36px;padding:4px 12px;gap:14px;font-size:.78rem;background:transparent;border-color:transparent}
+.composer-project-fixed{display:inline-flex;align-items:center;gap:7px;min-width:0;max-width:40%;color:var(--text);font-weight:500;cursor:default}
+.composer-project-fixed>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.branch-chip{display:inline-flex;align-items:center;gap:6px;min-width:0;max-width:min(46%,320px);padding:5px 8px;border-radius:3px;color:var(--text);font-weight:500;font-size:inherit;text-align:left}
+.branch-chip>.icon:first-child{width:14px;height:14px;color:var(--muted);flex-shrink:0}
+.branch-chip>.icon:last-child{width:11px;height:11px;color:var(--muted);flex-shrink:0}
+.branch-chip-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--mono);font-size:.94em;font-weight:500}
+.branch-chip:not(:disabled):hover{background:var(--raised)}
+.branch-chip[aria-expanded="true"]{background:#fff1b9;box-shadow:inset 0 0 0 1px rgb(177 132 16 / .13)}
+.branch-chip:not(:disabled):active{background:color-mix(in srgb,var(--accent) 52%,var(--bg))}
+.branch-chip-missing{color:var(--danger)}
+.branch-chip-missing>.icon:first-child{color:var(--danger)}
+html[data-theme="dark"] .branch-chip[aria-expanded="true"]{background:var(--accent-dim);box-shadow:inset 0 0 0 1px rgb(var(--accent-rgb) / .14)}
+html[data-theme="dark"] .branch-chip:not(:disabled):active{background:#5b4b20}
+.workspace[data-wallpaper] .conversation-pane .branch-chip:is(:active,[aria-expanded="true"]){background:var(--thread-accent)}
+.workspace[data-wallpaper] .conversation-pane .branch-chip:hover{background:var(--thread-hover)}
+
+/* Linked GitHub work reads as a small tag; its state is named, never only colored. */
+.link-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 8px 3px 6px;border-radius:999px;font-size:.72rem;font-weight:550;color:var(--accent-ink);background:var(--accent-dim);border:1px solid rgb(var(--accent-deep-rgb) / .12);white-space:nowrap;--press:.96}
+.link-chip>.icon{width:12px;height:12px}
+.link-chip-state{font-weight:400;color:var(--muted);text-transform:capitalize}
+.link-chip:not(:disabled):hover{background:color-mix(in srgb,var(--accent) 28%,var(--accent-dim));color:var(--text)}
+.link-chip-merged,.link-chip-closed{color:var(--muted);background:var(--raised);border-color:transparent}
+.link-chip-merged .link-chip-state{color:var(--success)}
+.link-chip-closed .link-chip-state{color:var(--danger)}
+.link-chip-draft .link-chip-state{color:var(--muted)}
+.board-card .link-chip,.task-detail-project .link-chip{font-size:.66rem;padding:2px 7px 2px 5px}
+.board-card-meta .link-chip{margin-left:auto}
+.board-card-meta .link-chip+.link-chip,.board-card-meta .link-chip+.board-running{margin-left:0}
+html[data-theme="dark"] .link-chip{border-color:rgb(var(--accent-rgb) / .16)}
+
+/* Worktree dialogs. */
+.worktree-dialog{width:min(430px,calc(100vw - 32px))}
+.worktree-dialog select{padding:9px 12px;border-radius:4px;background:var(--panel);border:1px solid var(--border);font-size:.86rem}
+.worktree-preview{font-family:var(--mono);font-size:.72rem;overflow-wrap:anywhere}
+.worktree-preview code,.worktree-cleanup-option code,.worktree-dialog .dialog-description code{font-family:var(--mono);font-size:.92em;background:var(--raised);border-radius:2px;padding:1px 4px}
+.worktree-preview-invalid{color:var(--danger)}
+.worktree-existing{display:flex;align-items:center;gap:9px;margin:12px 0 0;font-size:.82rem;color:var(--text)}
+.worktree-existing input,.worktree-cleanup-option input{width:15px;height:15px;accent-color:var(--accent);flex-shrink:0;margin:0}
+.worktree-error{color:var(--danger)}
+.worktree-cleanup-option{display:flex;align-items:flex-start;gap:10px;margin:6px 0 0;padding:11px 12px;border:1px solid var(--border);border-radius:4px;background:var(--panel);font-size:.84rem;line-height:1.5}
+.worktree-cleanup-option input{margin-top:2px}
+dialog .worktree-cleanup-option{background:color-mix(in srgb,var(--panel) 72%,transparent)}
+@media(prefers-contrast:more){.link-chip{border-color:var(--text)}.branch-chip[aria-expanded="true"]{outline:1px solid var(--focus);outline-offset:-1px}}

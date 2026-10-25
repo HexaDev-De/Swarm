@@ -1,0 +1,165 @@
+.live-sketch-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 17, 23, 0.85);
+  backdrop-filter: blur(8px);
+  user-select: none;
+  animation: live-sketch-fade-in 140ms ease-out;
+}
+
+@keyframes live-sketch-fade-in {
+  from { opacity: 0; transform: scale(0.99); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.live-sketch-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(24, 27, 36, 0.95);
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-wrap: wrap;
+}
+
+.live-sketch-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.live-sketch-tool {
+  background: transparent;
+  border: none;
+  color: var(--fg-dim, #94a3b8);
+  padding: 5px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 120ms ease;
+}
+
+.live-sketch-tool:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--fg, #f8fafc);
+}
+
+.live-sketch-tool.active,
+.live-sketch-tool[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.live-sketch-color {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 100ms ease;
+}
+
+.live-sketch-color:hover {
+  transform: scale(1.15);
+}
+
+.live-sketch-color.active {
+  border-color: #ffffff;
+  transform: scale(1.2);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.live-sketch-weight {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 6px;
+}
+
+.live-sketch-spacer {
+  flex: 1;
+}
+
+.live-sketch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg, #f8fafc);
+  transition: all 120ms ease;
+}
+
+.live-sketch-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.live-sketch-done {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.live-sketch-done:hover {
+  background: var(--accent-hover, var(--accent));
+  box-shadow: 0 2px 8px rgb(var(--accent-rgb) / 0.35);
+}
+
+.live-sketch-canvas-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 12px;
+}
+
+.live-sketch-canvas {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  cursor: crosshair;
+  background: #000;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.live-sketch-inline-input {
+  position: absolute;
+  z-index: 50;
+  min-width: 160px;
+  max-width: 340px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px solid #ef4444;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  outline: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.live-sketch-inline-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: normal;
+  font-size: 12px;
+}

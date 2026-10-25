@@ -1,0 +1,99 @@
+/* Page-wide motion: the hero arrives line by line under drifting leaves, the landscape
+   breathes and parallaxes, sections settle out of a soft blur, and small things (keys,
+   fireflies, a sheen on the button) keep the page quietly alive. Reduced motion turns
+   all of it off; nothing here gates content or interaction. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Hero */
+  .hero .rise { display: inline-block; animation: hero-rise 1.1s cubic-bezier(.2,.8,.2,1) both; }
+  .hero .rise + br + .rise { animation-delay: .14s; }
+  .hero-copy > .eyebrow, .hero-copy > .hero-pills { animation: hero-fade .9s cubic-bezier(.2,.8,.2,1) both; }
+  .hero-copy > .hero-description { animation: hero-fade 1s cubic-bezier(.2,.8,.2,1) .3s both; }
+  .hero-copy > .alpha-notice, .hero-copy > .hero-actions, .hero-copy > .download-caption, .hero-copy > .distribution-note { animation: hero-fade 1s cubic-bezier(.2,.8,.2,1) .45s both; }
+  .hero-product { animation: hero-product 1.4s cubic-bezier(.2,.8,.2,1) .35s both; }
+  .hero-landscape img { animation: landscape-breathe 26s ease-in-out infinite alternate; transform-origin: 60% 40%; }
+
+  .hero-leaves { position: absolute; inset: 0 0 30%; z-index: -1; overflow: hidden; pointer-events: none; }
+  .hero-leaves i { position: absolute; top: -40px; width: 14px; height: 8px; border-radius: 0 100% 0 100%; background: linear-gradient(135deg, #a9c47f, #6f8f4e); opacity: 0; animation: leaf-fall 16s linear infinite; }
+  .hero-leaves i:nth-child(1) { left: 8%; animation-delay: 0s; animation-duration: 17s; }
+  .hero-leaves i:nth-child(2) { left: 22%; animation-delay: 5s; animation-duration: 21s; width: 10px; height: 6px; }
+  .hero-leaves i:nth-child(3) { left: 37%; animation-delay: 9s; animation-duration: 15s; }
+  .hero-leaves i:nth-child(4) { left: 58%; animation-delay: 2s; animation-duration: 19s; width: 12px; height: 7px; }
+  .hero-leaves i:nth-child(5) { left: 71%; animation-delay: 12s; animation-duration: 18s; }
+  .hero-leaves i:nth-child(6) { left: 84%; animation-delay: 6s; animation-duration: 23s; width: 9px; height: 5px; }
+  .hero-leaves i:nth-child(7) { left: 93%; animation-delay: 14s; animation-duration: 16s; }
+  .hero-leaves i:nth-child(8) { left: 48%; animation-delay: 18s; animation-duration: 20s; width: 11px; height: 6px; }
+
+  /* Sections settle out of a soft blur; harness names follow one after another. */
+  .motion-ready .reveal { filter: blur(6px); transition: opacity .8s, transform .9s cubic-bezier(.2,.7,.2,1), filter .8s; }
+  .motion-ready .reveal.is-visible { filter: none; }
+  .motion-ready .harness-list > span { opacity: 0; transform: translateY(14px); transition: opacity .6s, transform .8s cubic-bezier(.2,.9,.25,1.2); }
+  .motion-ready .harness-list.is-visible > span { opacity: 1; transform: none; }
+  .harness-list > span:nth-child(2) { transition-delay: .07s; } .harness-list > span:nth-child(3) { transition-delay: .14s; } .harness-list > span:nth-child(4) { transition-delay: .21s; } .harness-list > span:nth-child(5) { transition-delay: .28s; } .harness-list > span:nth-child(6) { transition-delay: .35s; }
+  .harness-list .provider-logo { transition: transform .5s cubic-bezier(.2,.9,.25,1.4); }
+  .harness-list > span:hover .provider-logo { transform: translateY(-4px) rotate(-8deg) scale(1.12); }
+  .motion-ready .nf-grid > .nf-card { opacity: 0; transform: translateY(26px) scale(.98); transition: opacity .8s, transform 1s cubic-bezier(.2,.8,.2,1), box-shadow .4s; }
+  .motion-ready .nf-grid.is-visible > .nf-card { opacity: 1; transform: none; }
+  .nf-grid > .nf-card:nth-child(2) { transition-delay: .08s; } .nf-grid > .nf-card:nth-child(3) { transition-delay: .16s; } .nf-grid > .nf-card:nth-child(4) { transition-delay: .1s; } .nf-grid > .nf-card:nth-child(5) { transition-delay: .18s; } .nf-grid > .nf-card:nth-child(6) { transition-delay: .12s; } .nf-grid > .nf-card:nth-child(7) { transition-delay: .2s; }
+  .motion-ready .nf-grid.is-visible > .nf-card:hover { transform: translateY(-4px); transition-delay: 0s; }
+
+  /* The story: the chapter beside the preview is lit; the others rest. */
+  .story-step { transition: opacity .5s; }
+  .motion-ready .story-step:not(.is-current) { opacity: .42; }
+
+  /* The keyboard shortcut presses itself, gently, while it is on screen. */
+  .overlay-copy.is-visible .shortcut kbd { animation: key-press 4.2s ease-in-out infinite; }
+  .overlay-copy.is-visible .shortcut kbd:nth-child(2) { animation-delay: .12s; }
+  .overlay-copy.is-visible .shortcut kbd:nth-child(3) { animation-delay: .24s; }
+  .live-dot { animation: live-pulse 2s ease-in-out infinite; }
+
+  /* Fireflies over the evening lake. */
+  .fireflies { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .fireflies i { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #fff6b0; box-shadow: 0 0 10px 3px #ffe97a99; opacity: 0; animation: firefly 9s ease-in-out infinite; }
+  .fireflies i:nth-child(1) { left: 12%; top: 62%; } .fireflies i:nth-child(2) { left: 24%; top: 78%; animation-delay: 1.5s; animation-duration: 11s; } .fireflies i:nth-child(3) { left: 36%; top: 55%; animation-delay: 3s; }
+  .fireflies i:nth-child(4) { left: 61%; top: 70%; animation-delay: .8s; animation-duration: 10s; } .fireflies i:nth-child(5) { left: 74%; top: 58%; animation-delay: 4.2s; } .fireflies i:nth-child(6) { left: 86%; top: 80%; animation-delay: 2.4s; animation-duration: 12s; }
+  .fireflies i:nth-child(7) { left: 49%; top: 86%; animation-delay: 5.5s; } .fireflies i:nth-child(8) { left: 6%; top: 84%; animation-delay: 6.4s; animation-duration: 13s; } .fireflies i:nth-child(9) { left: 92%; top: 64%; animation-delay: 7.2s; }
+
+  /* A sheen crosses the yellow button on hover. */
+  .button { position: relative; overflow: hidden; }
+  .button::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, #ffffffa6 50%, transparent 65%); transform: translateX(-120%); pointer-events: none; }
+  .button:hover::after { transition: transform .9s cubic-bezier(.2,.8,.2,1); transform: translateX(120%); }
+
+  .light-facts .fact-symbol { animation: float-soft 6s ease-in-out infinite; }
+  .light-facts > div:nth-child(2) .fact-symbol { animation-delay: -3s; }
+}
+
+/* The hero preview tilts back a little and straightens as you scroll (scripts/motion.ts). */
+.hero-product { perspective: 1600px; }
+.hero-product > .app-window { transform: rotateX(var(--tilt, 0deg)) scale(var(--tilt-scale, 1)); transform-origin: 50% 0; will-change: transform; }
+.hero-landscape { transform: translateY(var(--parallax, 0px)); will-change: transform; }
+.scroll-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, #a9c47f, var(--yellow)); transform-origin: left; transform: scaleX(var(--progress, 0)); opacity: 0; transition: opacity .3s; }
+.navigation.is-scrolled .scroll-progress { opacity: 1; }
+.hero-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 10px; margin-bottom: 20px; }
+.new-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px 6px 6px; border-radius: 99px; background: #ffffffb3; box-shadow: 0 0 0 1px #dce2d3, 0 6px 18px -10px #31452855; font-size: 12px; font-weight: 550; color: #3e5236; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: transform .3s cubic-bezier(.2,.9,.25,1.3), box-shadow .3s; }
+.new-pill b { padding: 3px 8px; border-radius: 99px; background: var(--yellow); color: #253220; font-size: 10px; letter-spacing: .06em; }
+.new-pill:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px #cbd5b8, 0 10px 24px -10px #31452866; }
+.new-pill span:last-child { transition: transform .3s; }
+.new-pill:hover span:last-child { transform: translateX(3px); }
+
+@keyframes hero-rise { from { opacity: 0; transform: translateY(.45em) rotate(1deg); filter: blur(8px); } }
+@keyframes hero-fade { from { opacity: 0; transform: translateY(14px); } }
+@keyframes hero-product { from { opacity: 0; transform: translateY(60px) scale(.96); } }
+@keyframes landscape-breathe { from { transform: scale(1); } to { transform: scale(1.07) translate(-1%, 1%); } }
+@keyframes leaf-fall {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0); }
+  8% { opacity: .85; }
+  50% { transform: translate(60px, 45vh) rotate(220deg); }
+  90% { opacity: .7; }
+  100% { opacity: 0; transform: translate(-30px, 90vh) rotate(420deg); }
+}
+@keyframes key-press { 0%, 70%, 100% { transform: none; box-shadow: 0 2px 0 1px #afbc9b55, 0 3px 12px #4a64440d; } 76% { transform: translateY(2px); box-shadow: 0 0 0 1px #afbc9b77, 0 1px 4px #4a64440d; background: #fff6c4; } 84% { transform: none; } }
+@keyframes float-soft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes live-pulse { 0%, 100% { box-shadow: 0 0 0 0 #abd49599; } 50% { box-shadow: 0 0 0 4px #abd49500; } }
+@keyframes firefly { 0%, 100% { opacity: 0; transform: translate(0, 0); } 20% { opacity: 1; } 50% { opacity: .4; transform: translate(26px, -34px); } 70% { opacity: 1; } 85% { transform: translate(-14px, -60px); opacity: .3; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-product > .app-window { transform: none; }
+  .hero-landscape { transform: none; }
+  .hero-leaves, .fireflies { display: none; }
+  .motion-ready .reveal { filter: none; }
+}

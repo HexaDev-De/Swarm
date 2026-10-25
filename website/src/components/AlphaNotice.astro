@@ -1,0 +1,18 @@
+---
+interface Props { id: string }
+const { id } = Astro.props;
+---
+<p id={id} class="alpha-notice"><strong>An Alpha preview.</strong> PandaCode is still in Alpha. Expect bugs and changes as we improve.</p>
+
+<style>
+  .alpha-notice {
+    max-width: 340px;
+    margin: 22px auto 0;
+    color: #42543a;
+    font-size: 13px;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+  strong { display: block; font-weight: 650; }
+  :global(.download-content) > .alpha-notice { color: #e4ebda; }
+</style>

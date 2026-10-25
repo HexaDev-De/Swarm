@@ -1,0 +1,24 @@
+# Settings
+
+Settings opens on **General**, with grouped rows for text size, compact conversations, and wallpapers. Wallpaper customization includes separate live visibility and blur controls, the seven scene sets, and a fixed favorite. Preferences save automatically.
+
+**Agents** contains the default agent, tools and integrations, and compact installation status rows. Expand a provider to see its version and executable path. Refresh checks installations without resetting the selected tab, default agent control, or expanded provider details.
+
+**General → Quick launcher** enables the global overlay and changes its shortcut. The default is Command + Shift + Space on macOS (Control + Shift + Space elsewhere). Record a key combination or type one, then Save. PandaCode must remain running; clicking another app hides the overlay without stopping agents. Escape returns from a conversation to the active list, then hides the overlay on the next press. The lightweight overlay shows only currently active agents: running tasks, agents waiting for approval, coordinating architects, their workers, and provider subagents. Selecting an entry opens its streaming conversation inside the overlay, including worker and subagent responses. The back arrow returns to the list. Only the explicit **Open in app** button brings the full workspace forward; a conversation remains readable if its agent finishes while you are viewing it. Completed, idle, and stopped runs disappear automatically. The model button beside the project opens the same searchable harness/model picker as the workspace, with provider logos and discovered model names. An explicit overlay selection persists across restarts and workspace task changes. Until one is chosen, new work follows the workspace’s last harness/model/effort; permissions and project context continue to follow the workspace. Saved team workers are preserved, while an explicit overlay selection sets the architect for the new task only. Its project selector can change the launch project. Shortcut conflicts leave the previous binding intact.
+
+**Agents → Provider connections → Set up** configures GLM Coding Plan and optional executable paths for OpenCode or Antigravity. GLM requires Claude Code plus a Z.ai Coding Plan key; on macOS the saved key lives in Keychain. Other platforms can supply `ZAI_API_KEY` in the application environment. OpenCode uses its own CLI login. Antigravity requires Google's official ACP server and its sign-in; the interactive `agy` executable is not interchangeable. See [provider details](providers.md).
+
+The **Claude Code** card reports inherited credential sources and checks the saved
+Claude login. **Prefer saved Claude login** removes inherited API credentials and
+provider routing overrides only from new Claude processes started by PandaCode.
+Choose **Use current environment** to restore the default. Claude settings and
+organization policies can still affect authentication; see
+[Claude login details](providers.md#claude-login-and-environment-credentials).
+
+The two tabs support arrow keys, Home, and End. The layout uses rem-based dimensions and stacks controls in narrow windows, including at 140–160% text size. System colors and reduced-motion preferences apply to both tabs.
+
+The Settings module and styles load when opened. General uses local state immediately; provider discovery starts only when Agents is opened or refreshed. A delayed discovery response cannot replace a different dialog or discard wallpaper edits. Closing or replacing a settings view removes its event handlers and contents.
+
+## Verification
+
+The update passed 23 Node checks, the production build, 55 Chrome browser cases, and 41 WebKit cases. These cover blur dragging and persistence, wallpaper schedules, tab keyboard navigation, delayed discovery, default-agent menus, and layout at enlarged text sizes. One existing WebKit inspector-resize timing case passed when rerun in isolation. General, Agents, and wallpaper controls were visually checked in dark and light themes and in a narrow window, with no page errors.

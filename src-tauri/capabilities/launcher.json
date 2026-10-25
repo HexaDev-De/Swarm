@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "launcher-capability",
+  "description": "Trusted lightweight launcher. Application commands are restricted by the native allowlist.",
+  "webviews": ["launcher"],
+  "permissions": ["core:event:allow-listen", "core:event:allow-unlisten"]
+}

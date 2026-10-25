@@ -1,0 +1,15 @@
+/* Settings → Agents → Cloud sandboxes. */
+.cloud-provider+.cloud-provider{border-top:1px solid var(--border)}
+.cloud-form{display:flex;flex-direction:column;gap:8px;padding:0 1rem .9rem}
+.cloud-form label{display:flex;align-items:center;gap:10px;font-size:.8rem}
+.cloud-form label>span{flex:none;width:7.5rem;color:var(--muted)}
+.cloud-form input{flex:1;min-width:0;height:32px;padding:0 10px;border-radius:3px;border:1px solid color-mix(in srgb,var(--text) 12%,transparent);background:color-mix(in srgb,var(--text) 4%,transparent);color:var(--text);font:inherit;font-size:.82rem}
+.cloud-form input:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.cloud-note{margin:0;font-size:.72rem;line-height:1.5;color:var(--muted)}
+.cloud-progress{margin:0;font-size:.76rem;color:var(--text)}
+.cloud-error{margin:0;font-size:.76rem;color:var(--danger)}
+.cloud-actions{display:flex;justify-content:flex-end;gap:8px}
+@media(max-width:560px){.cloud-form label{flex-direction:column;align-items:stretch;gap:4px}.cloud-form label>span{width:auto}}
+.cloud-buttons{display:flex;gap:6px;align-items:center}
+.cloud-row-status{margin:-.3rem 1rem .7rem;font-size:.74rem;color:var(--muted)}
+.cloud-row-status.cloud-error{color:var(--danger)}

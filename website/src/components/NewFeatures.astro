@@ -1,0 +1,116 @@
+---
+/* What's new in 0.2.48: one card per feature, each with a small scene that plays while
+ * it is on screen (scripts/new-features.ts). Without JavaScript, or with reduced motion,
+ * every scene shows its finished state. */
+import { logo } from '../lib/demo';
+const svg = (path: string) => `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+const also = [
+  [svg('<circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M6 8v8M18 16V9a3 3 0 0 0-3-3h-4m2-2-2 2 2 2"/>'), 'Linked pull requests', 'A task’s PR, checks and comments in the inspector.'],
+  [svg('<path d="M4 7h11M4 12h8M4 17h11M17 10l3 2-3 2"/>'), 'Queue and steer', 'Enter queues a follow-up. ⌘↩ steers mid-turn.'],
+  [svg('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17"/>'), 'Your colors', 'Accents follow your wallpaper, or import a VS Code theme.'],
+  [svg('<path d="M4 20l4-1 11-11-3-3L5 16Z"/><path d="M14 6l3 3"/>'), 'Sketch and attach', 'Mockups, images, documents and folders as context.'],
+];
+---
+<section id="whats-new" class="new-features section-width" aria-labelledby="new-title">
+  <div class="section-heading reveal">
+    <p class="eyebrow">NEW IN 0.2.48</p>
+    <h2 id="new-title">More hands.<br>Fewer tabs.</h2>
+    <p>Agents that live on your computer, machines they can drive,<br>phones they can test on, and a way to ship it all.</p>
+  </div>
+
+  <div class="nf-grid">
+    <article class="nf-card nf-wide" data-nf="bots" aria-labelledby="nf-bots-title">
+      <div class="nf-visual" aria-hidden="true">
+        <div class="nf-chat-head"><span class="nf-face">🔭</span><b>Scout</b><small>Researcher · on Telegram</small></div>
+        <div class="nf-chat">
+          <div class="nf-msg me" data-step data-wait="500">What did I miss today?</div>
+          <div class="nf-typing" data-step data-transient data-wait="400"><i></i><i></i><i></i></div>
+          <div class="nf-msg bot" data-step data-wait="1100">The onboarding PR merged, CI is green, and Sam asked about Friday’s demo.</div>
+          <div class="nf-msg me" data-step data-wait="1300">Every weekday at 9, send me a digest</div>
+          <div class="nf-msg bot" data-step data-wait="1000">Done. <span class="nf-chip">⏰ Weekdays 9:00 · Morning digest</span></div>
+        </div>
+        <div class="nf-channels">
+          <span data-step data-wait="250"><i class="tg">T</i>Telegram</span><span data-step data-wait="150"><i class="sl">S</i>Slack</span><span data-step data-wait="150"><i class="dc">D</i>Discord</span><span data-step data-wait="150"><i class="wa">W</i>WhatsApp</span><span data-step data-wait="150"><i class="web">◎</i>Web chat</span>
+        </div>
+      </div>
+      <div class="nf-copy"><span class="chapter-number">NEW · BOTS</span><h3 id="nf-bots-title">Agents that never clock out.</h3><p>A bot lives on your computer. It remembers what you tell it, works on a schedule, and answers you here, in a browser, or in Telegram, Slack, Discord and WhatsApp. It asks before acting, with rules you set.</p></div>
+    </article>
+
+    <article class="nf-card" data-nf="teams" aria-labelledby="nf-teams-title">
+      <div class="nf-visual" aria-hidden="true">
+        <div class="nf-picker"><span class="nf-swatch"></span>Thoughtful makers<small>Agent team</small><span>⌄</span></div>
+        <ul class="nf-roster">
+          <li data-step data-wait="700"><span set:html={logo('claude')}></span>Claude Opus<em>Architect</em></li>
+          <li data-step data-wait="450"><span set:html={logo('codex')}></span>GPT-6 Astra<em>Worker</em></li>
+          <li data-step data-wait="450"><span set:html={logo('kimi')}></span>Kimi K3<em>Worker</em></li>
+          <li class="nf-out"><span set:html={logo('glm')}></span>GLM 5<em>Not on this team</em></li>
+        </ul>
+      </div>
+      <div class="nf-copy"><span class="chapter-number">NEW · AGENT TEAMS</span><h3 id="nf-teams-title">Build a team.<br>Pick it like a model.</h3><p>Save a team in Settings and it appears in the model picker. Only your team’s models are ever orchestrated. The classic Architect & workers screen is one switch away.</p></div>
+    </article>
+
+    <article class="nf-card" data-nf="machines" aria-labelledby="nf-machines-title">
+      <div class="nf-visual" aria-hidden="true">
+        <div class="nf-vm">
+          <div class="nf-vm-bar"><span>Applications</span><span>ubuntu · 2 GB</span></div>
+          <div class="nf-term">
+            <p><span class="nf-prompt">agent@ubuntu:~/meadow$</span> <span data-step data-type data-wait="600">npm test</span></p>
+            <p data-step data-wait="500">✓ src/today.test.ts (18)</p>
+            <p data-step data-wait="300">✓ src/sync.test.ts (24)</p>
+            <p class="nf-ok" data-step data-wait="400">Tests 42 passed</p>
+          </div>
+          <span class="nf-cursor"></span>
+        </div>
+      </div>
+      <div class="nf-copy"><span class="chapter-number">NEW · MACHINES</span><h3 id="nf-machines-title">Its own computer.</h3><p>macOS and Linux VMs on your Mac, or sandboxes on Daytona, Cloudflare and AWS. Agents see the screen, click, type and run commands, away from your files.</p></div>
+    </article>
+
+    <article class="nf-card" data-nf="devices" aria-labelledby="nf-devices-title">
+      <div class="nf-visual" aria-hidden="true">
+        <div class="nf-phone">
+          <div class="nf-phone-screen">
+            <span class="nf-island"></span>
+            <p class="nf-phone-title">Today</p>
+            <p class="nf-todo" data-step data-wait="900"><i></i>Water the bamboo<span class="nf-tap"></span></p>
+            <p class="nf-todo" data-step data-wait="900"><i></i>Ship the onboarding<span class="nf-tap"></span></p>
+            <p class="nf-todo"><i></i>Call Mom back</p>
+          </div>
+        </div>
+      </div>
+      <div class="nf-copy"><span class="chapter-number">NEW · SIMULATORS</span><h3 id="nf-devices-title">Your app, beside the chat.</h3><p>The iOS Simulator and Android emulator live in the sidebar on a lifelike device. Tap through what your agent just built.</p></div>
+    </article>
+
+    <article class="nf-card" data-nf="deploy" aria-labelledby="nf-deploy-title">
+      <div class="nf-visual" aria-hidden="true">
+        <div class="nf-deploy">
+          <div class="nf-targets"><span class="on">▲ Vercel</span><span>Cloudflare</span><span>AWS</span></div>
+          <div class="nf-progress"><i data-step data-wait="500"></i><i data-step data-wait="600"></i><i data-step data-wait="600"></i><i data-step data-wait="600"></i></div>
+          <ol class="nf-log"><li data-step data-wait="0">npm run build ✓</li><li data-step data-wait="500">vercel deploy --prod</li><li data-step data-wait="600">Checking the live URL… 200 OK</li></ol>
+          <div class="nf-live" data-step data-wait="500"><b>Live</b>meadow.vercel.app<span class="nf-burst"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+        </div>
+      </div>
+      <div class="nf-copy"><span class="chapter-number">NEW · DEPLOY</span><h3 id="nf-deploy-title">From “looks good” to live.</h3><p>Pick Vercel, Cloudflare or AWS from the header. An agent builds, deploys, checks the live URL and fixes what breaks. Keys stay in your keychain.</p></div>
+    </article>
+
+    <article class="nf-card nf-wide" data-nf="saver" aria-labelledby="nf-saver-title">
+      <div class="nf-visual" aria-hidden="true">
+        <div class="nf-saver">
+          <div class="nf-levels"><span data-step data-transient data-meter="1" data-count="72" data-wait="300">Off</span><span data-step data-transient data-meter=".43" data-count="31" data-wait="1900">Lite</span><span data-step data-transient data-meter=".25" data-count="18" data-wait="1900">Full</span><span data-step data-meter=".15" data-count="11" data-wait="1900">Ultra</span></div>
+          <div class="nf-reply">
+            <p class="nf-r0">Sure! I’d be happy to help. I looked at the failing test, and it seems the date helper assumes UTC. I’ve updated it to use your time zone, and all 42 tests pass now. Let me know if you need anything else!</p>
+            <p class="nf-r1">The failing test came from the date helper assuming UTC. I switched it to your time zone, and all 42 tests pass.</p>
+            <p class="nf-r2">Date helper assumed UTC. Now uses your time zone. 42/42 tests pass.</p>
+            <p class="nf-r3">UTC bug → your TZ. 42/42 ✓</p>
+          </div>
+          <div class="nf-meter"><span class="nf-bar"><i></i></span><b class="nf-count">≈ 11 tokens</b></div>
+        </div>
+      </div>
+      <div class="nf-copy"><span class="chapter-number">NEW · TOKEN SAVER</span><h3 id="nf-saver-title">Same answer.<br>Fewer tokens.</h3><p>Turn on a pack per thread, from Caveman Lite to Ultra, plus Lean code and Quiet tools. PandaCode reminds the agent only now and then, so the reminder stays cheap too. <small>Counts here are an example (est.).</small></p></div>
+    </article>
+
+    <aside class="nf-card nf-also" aria-label="Also new">
+      <span class="chapter-number">ALSO NEW</span>
+      <ul>{also.map(([mark, title, text]) => <li><span class="nf-also-icon" set:html={mark}></span><span><b>{title}</b><small>{text}</small></span></li>)}</ul>
+    </aside>
+  </div>
+</section>

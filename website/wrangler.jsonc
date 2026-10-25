@@ -1,0 +1,12 @@
+// Static-assets-only Cloudflare Workers deploy for the website.
+// Build first (`ASTRO_TELEMETRY_DISABLED=1 npm run build`), then `npx wrangler deploy`.
+// The account comes from your Wrangler login or CLOUDFLARE_ACCOUNT_ID; none is hardcoded.
+{
+  "name": "pandacode-site",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash", // the default: /privacy serves privacy/index.html
+    "not_found_handling": "404-page"
+  }
+}

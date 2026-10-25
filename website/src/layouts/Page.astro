@@ -1,0 +1,53 @@
+---
+/* Shared shell for the site's reading pages (changelog, privacy, license): the landing
+ * page's navigation and footer, a calm header with drifting leaves, and pages.ts for
+ * reveals, the scroll progress line and the contents rail. */
+import '../style.css';
+import '../pages.css';
+import PreviewTag from '../components/PreviewTag.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { project } from '../lib/distribution';
+
+interface Props { title: string; description: string; eyebrow: string; heading: string; lede?: string; current: 'changelog' | 'privacy' | 'license' }
+const { title, description, eyebrow, heading, lede, current } = Astro.props;
+const links = [['/changelog/', 'Changelog', 'changelog'], ['/privacy/', 'Privacy', 'privacy'], ['/license/', 'License', 'license']] as const;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f9f2">
+  <title>{title} — PandaCode</title>
+  <meta name="description" content={description}>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={`${title} — PandaCode`}>
+  <meta property="og:description" content={description}>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body class="page-body">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="navigation is-scrolled">
+    <nav class="nav-inner" aria-label="Main navigation">
+      <a class="wordmark" href="/" aria-label="PandaCode home"><img src="/favicon.svg" width="30" height="30" alt="">PandaCode<PreviewTag /></a>
+      <div class="nav-links"><a href="/#whats-new">What’s new</a>{links.map(([href, label, id]) => <a href={href} aria-current={id === current ? 'page' : undefined}>{label}</a>)}<a href={project.repo} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a></div>
+      <a class="button button-small" href={project.releases} target="_blank" rel="noopener noreferrer" aria-label="Download PandaCode from GitHub Releases">Download <span aria-hidden="true">↗</span></a>
+    </nav>
+    <span class="scroll-progress" aria-hidden="true"></span>
+  </header>
+  <main id="main">
+    <header class="page-hero">
+      <div class="page-hero-leaves" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="section-width">
+        <p class="eyebrow page-rise">{eyebrow}</p>
+        <h1 class="page-rise">{heading}</h1>
+        {lede && <p class="page-lede page-rise">{lede}</p>}
+        <slot name="hero" />
+      </div>
+    </header>
+    <slot />
+  </main>
+  <SiteFooter />
+  <script>import '../scripts/pages';</script>
+</body>
+</html>

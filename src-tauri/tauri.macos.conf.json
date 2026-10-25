@@ -1,0 +1,5 @@
+{
+  "app": {
+    "windows": [{"title": "PandaCode", "width": 1440, "height": 940, "minWidth": 860, "minHeight": 580, "transparent": true, "backgroundColor": "#00000000", "theme": "Dark", "titleBarStyle": "Overlay", "trafficLightPosition": {"x": 14, "y": 29.5}, "hiddenTitle": true}]
+  }
+}

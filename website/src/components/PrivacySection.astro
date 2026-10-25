@@ -1,0 +1,67 @@
+---
+import { project } from '../lib/distribution';
+---
+<section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+  <div class="privacy-layout section-width">
+    <div class="privacy-intro reveal">
+      <p class="eyebrow">A LITTLE SPACE. ALL YOURS.</p>
+      <h2 id="privacy-title">Your work.<br>Your business.</h2>
+      <p>PandaCode collects nothing. No account, no telemetry, no analytics, and no PandaCode servers to send anything to.</p>
+      <a class="privacy-policy-link" href="/privacy/">Read the full privacy policy <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="privacy-details">
+      <div class="privacy-row">
+        <span class="privacy-number" aria-hidden="true">01</span>
+        <div><h3>On your device.</h3><p>Your projects, conversations, bots and settings stay in local storage, and your keys stay in your system’s secure store. There is no cloud copy, because there is no PandaCode cloud.</p></div>
+      </div>
+      <div class="privacy-row">
+        <span class="privacy-number" aria-hidden="true">02</span>
+        <div><h3>With the services you choose.</h3><p>Your coding agents, model providers and the integrations you turn on (GitHub, bot channels, cloud sandboxes, deploy targets, optional Jev) receive what the work needs, directly from your computer and under your own accounts. Their privacy policies apply.</p></div>
+      </div>
+      <div class="privacy-row">
+        <span class="privacy-number" aria-hidden="true">03</span>
+        <div><h3>With PandaCode. Nothing.</h3><p>No license checks, crash reports or usage tracking. The app only checks GitHub for its own updates and for new versions of your coding agents, and fetches a public model price list, without any personal data.</p></div>
+      </div>
+      <div class="privacy-row">
+        <span class="privacy-number" aria-hidden="true">04</span>
+        <div><h3>Check for yourself.</h3><p>Every line is open source. Read the code, build it yourself, or ask a question in <a href={project.issues} target="_blank" rel="noopener noreferrer">GitHub issues</a>.</p></div>
+      </div>
+      <details>
+        <summary>What about this website?<span aria-hidden="true">+</span></summary>
+        <div class="privacy-records">
+          <p>This website is static. It sets no cookies, runs no analytics and loads nothing from other companies.</p>
+          <p>Like any website, our web host may keep standard server logs, such as IP addresses and the pages requested, to keep the site running and secure.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<style>
+  .privacy-section { padding-block: 110px; background: linear-gradient(145deg, #e8eedf, #f0f3e8 65%, #f5f5e9); }
+  .privacy-layout { display: grid; grid-template-columns: .95fr 1fr; gap: 12%; align-items: start; }
+  .privacy-intro > p:last-child { max-width: 390px; margin-top: 26px; font-size: 18px; line-height: 1.65; color: #50604a; }
+  .privacy-row { display: flex; gap: 22px; padding-block: 24px; border-bottom: 1px solid #52603626; }
+  .privacy-row:first-child { padding-top: 4px; }
+  .privacy-number { flex-shrink: 0; padding-top: 5px; font-size: 11px; color: #617348; font-variant-numeric: tabular-nums; }
+  h3 { font-size: 22px; letter-spacing: -.025em; line-height: 1.3; }
+  .privacy-row p, .privacy-records p { margin-top: 10px; font-size: 14px; line-height: 1.7; color: #50604a; }
+  .privacy-policy-link { display: inline-flex; gap: 10px; margin-top: 26px; font-size: 14px; font-weight: 600; text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+  .privacy-policy-link span { transition: transform .3s; }
+  .privacy-policy-link:hover span { transform: translateX(3px); }
+  .privacy-row a { text-decoration: underline; text-underline-offset: 3px; }
+  details { margin-top: 10px; }
+  summary { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-block: 18px; cursor: pointer; list-style: none; font-size: 13px; font-weight: 600; }
+  summary::-webkit-details-marker { display: none; }
+  summary span { font-size: 22px; font-weight: 400; transition: transform 180ms ease; }
+  details[open] summary span { transform: rotate(45deg); }
+  .privacy-records { padding-bottom: 10px; }
+  .privacy-records p:first-child { margin-top: 0; }
+  @media (max-width: 760px) {
+    .privacy-section { padding-block: 70px; }
+    .privacy-layout { grid-template-columns: 1fr; gap: 36px; }
+    .privacy-intro > p:last-child { font-size: 16px; }
+    .privacy-row { gap: 17px; }
+  }
+  @media (prefers-reduced-motion: reduce) { summary span { transition: none; } }
+</style>

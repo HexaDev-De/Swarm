@@ -1,0 +1,24 @@
+:is(.sidebar-resize-handle,.inspector-resize-handle){position:absolute;inset:0 0 0 auto;width:8px;z-index:5;cursor:col-resize;touch-action:none;user-select:none;-webkit-user-select:none;outline:none}
+:is(.sidebar-resize-handle,.inspector-resize-handle)::after{content:"";position:absolute;inset:8px 0 8px auto;width:2px;border-radius:1px;background:var(--accent);opacity:0;transition:opacity 120ms ease}
+:is(.sidebar-resize-handle,.inspector-resize-handle):is(:hover,:focus-visible)::after,.sidebar-resizing .sidebar-resize-handle::after,.inspector-resizing .inspector-resize-handle::after{opacity:.8}
+:is(.sidebar-resize-handle,.inspector-resize-handle):focus-visible::after{width:3px;background:var(--focus);opacity:1}
+:is(.sidebar-resizing,.inspector-resizing),:is(.sidebar-resizing,.inspector-resizing) *{cursor:col-resize!important;user-select:none!important;-webkit-user-select:none!important}
+.board-view .sidebar-resize-handle{display:none}
+@media(max-width:650px){.sidebar-resize-handle{display:none}}
+@media(prefers-reduced-motion:reduce){:is(.sidebar-resize-handle,.inspector-resize-handle)::after{transition:none}}
+@media(prefers-contrast:more){:is(.sidebar-resize-handle,.inspector-resize-handle)::after{background:var(--text)}}
+.header-leading{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.sidebar-toggle{width:28px;height:28px}
+.sidebar-toggle .icon{width:17px;height:17px}
+.sidebar>.brand{justify-content:space-between;gap:8px;padding:0 14px}
+.sidebar>.brand .brand-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html[data-native-platform=macos] .sidebar>.brand{padding-left:var(--traffic-light-gutter)}
+.workspace.sidebar-collapsed{grid-template-columns:minmax(0,1fr) var(--inspector-width,302px)}
+.workspace.sidebar-collapsed.inspector-closed{grid-template-columns:minmax(0,1fr)}
+html[data-native-platform=macos] .workspace.sidebar-collapsed .workspace-header{padding-left:var(--traffic-light-gutter)}
+@media(min-width:1450px){.workspace.sidebar-collapsed{grid-template-columns:minmax(0,1fr) var(--inspector-width,330px)}}
+@media(max-width:1100px){.workspace.sidebar-collapsed{grid-template-columns:minmax(0,1fr) var(--inspector-width,270px)}}
+@media(max-width:920px){.workspace.sidebar-collapsed{grid-template-columns:minmax(0,1fr)}}
+
+.inspector-resize-handle{inset:0 auto 0 0}
+.inspector-resize-handle::after{inset:8px auto 8px 0}

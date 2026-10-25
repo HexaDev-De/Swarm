@@ -1,0 +1,149 @@
+[
+  {
+    "day": "mon",
+    "period": "morning",
+    "path": "public/wallpapers/mon-morning.webp",
+    "prompt": "Use case: stylized-concept. Asset type: wide 16:9 desktop scenery wallpaper for a coding app. Create one full-bleed, beautifully painterly anime background illustration of a misty bamboo river valley at pale golden dawn. Tall elegant bamboo and a small weathered wooden footbridge frame the lower and side edges; calm winding water and mist-soft distant hills fill broad uncluttered central space. Gentle sage greens, soft blue atmospheric depth, pale gold morning light. Refined hand-painted background art with delicate edge details and natural brush texture, cinematic landscape composition. The middle 60 percent must stay quiet and low contrast so interface text remains readable over it. No people, no characters, no text, no logos, no UI, no borders, no watermark. Landscape, not a collage.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "mon",
+    "period": "afternoon",
+    "path": "public/wallpapers/mon-afternoon.webp",
+    "prompt": "Use case: stylized-concept. Asset type: a single 16:9 wide landscape wallpaper for a coding workspace, no UI in the image. Scene: a Mediterranean cliffside village of warm cream buildings and terracotta roofs, on the far lower-left perimeter, above a serene cobalt sea. The sea stretches across a large open center and right, with hazy far coast and soft sunny clouds near the horizon. Painterly anime scenery background art, delicate hand-painted textures, cinematic but restful. Clearly soft sunny afternoon light, gentle blue water with restrained highlights. Broad low-contrast calm central area so interface text remains readable, visual details kept to lower and side edges. No people, characters, text, logos, borders or watermarks. Generate exactly one finished wallpaper.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "mon",
+    "period": "night",
+    "path": "public/wallpapers/mon-night.webp",
+    "prompt": "Use case: stylized-concept. Asset type: calm desktop coding-app wallpaper, landscape 16:9. An original painterly anime scenery background of a moonlit bamboo grove beside a tranquil jade pond, with just a few delicate fireflies. Deep teal greens and soft midnight blue, gentle silver moonlight, soothing quiet nighttime atmosphere, exquisite hand-painted background art. Broad softly shaded low-contrast central space for reading UI text; bamboo silhouettes frame the outer edges and pond occupies the calm lower middle. Keep any small luminous details at the perimeter and lower edges. No characters, no text, no typography, no logos, no UI, no watermark, no frame or border, no high-contrast busy center, no neon. Full-bleed scenic artwork.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "tue",
+    "period": "morning",
+    "path": "public/wallpapers/tue-morning.webp",
+    "prompt": "Use case: stylized-concept. Asset type: wide 16:9 desktop scenery wallpaper for a coding app. Create one full-bleed original anime scenery background illustration of a quiet seaside railway winding along a turquoise coast in early morning. Slender tracks curve along the lower-left cliffs toward distant pastel coastal houses. A vast calm ocean and pale pink dawn sky occupy the broad middle and right; soft sea haze, sleepy headland silhouettes, sparse wild grasses at the lower edges. Sky pinks, calm aquamarine and blue-green sea. Refined hand-painted anime background art, delicate brush texture and gentle cinematic atmosphere; natural landscape, not photorealistic, not flat vector. Broad calm low-contrast central space, attractive detailed interest restricted mostly to the perimeter and lower edges, so UI text can remain readable over it. Morning soft light, restful mood. No people, no characters, no text, no logos, no UI, no borders, no watermark, no collage.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "tue",
+    "period": "afternoon",
+    "path": "public/wallpapers/tue-afternoon.webp",
+    "prompt": "Use case: stylized-concept. Asset type: a single 16:9 wide landscape wallpaper for a coding workspace, no UI in the image. Scene: A tranquil Japanese garden pond in the afternoon, graceful green maple branches framing upper corners, a small old stone bridge on the far-right edge, gentle trees and moss along lower edges. The pond is broad and calm through the center, reflecting softened pale jade and warm sky, with restrained ripples. Style: painterly anime scenery background art, delicate hand-painted textures, elegant compositions. Lighting: clearly soft afternoon daylight, warm but not harsh. Calm broad low-contrast central space so interface text remains readable, detailed interest at perimeter and lower edges. No people, characters, text, logos, borders or watermarks. Generate exactly one finished wallpaper.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "tue",
+    "period": "night",
+    "path": "public/wallpapers/tue-night.webp",
+    "prompt": "Use case: stylized-concept. Asset type: calm desktop coding-app wallpaper, wide landscape 16:9. An original painterly anime scenery of a rainy quiet neighborhood city street at blue hour. Tall buildings stay at the perimeter, amber-lit windows gently reflect in wet dark pavement, soft rain haze and a wide quiet slate-blue central street disappear toward the horizon. Buildings have no readable signs. Muted navy, dusty blue and subdued warm amber. Exquisite hand-painted anime background art, soothing nighttime atmosphere. Composition is full-bleed scenery, broad softly shaded low-contrast central space for reading UI text; all bright details restricted to perimeter or lower edges. No characters, text, typography, logos, UI, watermark, frame or border. No busy high-contrast center or neon.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "wed",
+    "period": "morning",
+    "path": "public/wallpapers/wed-morning.webp",
+    "prompt": "Use case: stylized-concept. Asset type: wide 16:9 desktop scenery wallpaper for a coding app. Create one full-bleed original anime scenery background illustration of terraced rice fields in lush green mountains with morning mist. Elegant curving terrace edges step along the lower third and sides, their shallow water softly reflecting the pale dawn sky. Distant mountain silhouettes fade into cool silvery mist across the broad open center. Young green rice shoots, jade hills and small warm sunrise highlights. Refined hand-painted anime background art, delicate brush texture and gentle cinematic atmosphere; natural landscape, not photorealistic, not flat vector. Broad calm low-contrast central space, attractive detailed interest restricted mostly to the perimeter and lower edges, so UI text can remain readable over it. Morning soft light, restful mood. No people, no characters, no text, no logos, no UI, no borders, no watermark, no collage.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "wed",
+    "period": "afternoon",
+    "path": "public/wallpapers/wed-afternoon.webp",
+    "prompt": "Use case: stylized-concept. Asset type: a single 16:9 wide landscape wallpaper for a coding workspace, no UI in the image. Scene: A vast sea of soft sunlit clouds in the afternoon, distant floating islands mostly framing the lower and far side edges, a tiny weathered windmill silhouette on one small lower-left island. The broad central view is open cloud haze and sky with gentle lavender-blue and golden cream transitions. Fantastical but quiet and believable as anime landscape art. Style: painterly anime scenery background art, delicate hand-painted textures, elegant compositions. Lighting: clearly soft afternoon daylight, warm but not harsh. Calm broad low-contrast central space so interface text remains readable, detailed interest at perimeter and lower edges. No people, characters, text, logos, borders or watermarks. Generate exactly one finished wallpaper.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "wed",
+    "period": "night",
+    "path": "public/wallpapers/wed-night.webp",
+    "prompt": "Use case: stylized-concept. Asset type: calm desktop coding-app wallpaper, wide landscape 16:9. An original painterly anime scenery of a small mountain observatory beneath stars and faint wisps of nebula in a deep dark-violet night sky. The observatory sits small on a far lower corner ridge, sweeping distant mountain silhouettes lie low, broad soft dark sky forms generous calm reading space. Muted violet, midnight blue and soft silver. Star field sparse and delicate, nebula barely luminous, no bright central galaxy. Exquisite hand-painted anime background art, soothing nighttime atmosphere. Composition is full-bleed scenery, broad softly shaded low-contrast central space for reading UI text; all bright details restricted to perimeter or lower edges. No characters, text, typography, logos, UI, watermark, frame or border. No busy high-contrast center or neon.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "thu",
+    "period": "morning",
+    "path": "public/wallpapers/thu-morning.webp",
+    "prompt": "Use case: stylized-concept. Asset type: wide 16:9 desktop scenery wallpaper for a coding app. Create one full-bleed original anime scenery background illustration of a quiet Japanese canal town with flowering cherry trees in a cool crisp spring morning. Low traditional houses and blossom-laden cherry branches line the outer edges; a broad still canal reflects soft sky and pale pink blossoms through the open middle. A small distant arched stone bridge, blue-gray roof tiles, warm cream facades, scattered petals near the foreground banks; serene blue and blush palette. Refined hand-painted anime background art, delicate brush texture and gentle cinematic atmosphere; natural landscape, not photorealistic, not flat vector. Broad calm low-contrast central space, attractive detailed interest restricted mostly to the perimeter and lower edges, so UI text can remain readable over it. Morning soft light, restful mood. No people, no characters, no text, no logos, no UI, no borders, no watermark, no collage.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "thu",
+    "period": "afternoon",
+    "path": "public/wallpapers/thu-afternoon.webp",
+    "prompt": "Use case: stylized-concept. Asset type: a single 16:9 wide landscape wallpaper for a coding workspace, no UI in the image. Scene: A tiny quiet Japanese countryside train station beside sprawling sunflower fields during a honey-colored late afternoon. The simple station shelter and railway line stay along the lower-left perimeter, sunflowers frame the bottom and right, distant gentle hills beneath a wide softly graduated golden-blue sky. Open quiet space across the center. Style: beautiful painterly anime scenery background art, expressive hand-painted forms and delicate textures, elegant compositions. Lighting: clearly soft afternoon daylight, warm but not harsh. Calm broad low-contrast central space so interface text remains readable, detailed interest at perimeter and lower edges. No people, characters, text, readable station signage, logos, borders or watermarks. Generate exactly one finished wallpaper.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "thu",
+    "period": "night",
+    "path": "public/wallpapers/thu-night.webp",
+    "prompt": "Use case: stylized-concept. Asset type: calm desktop coding-app wallpaper, wide landscape 16:9. An original painterly anime scenery of a tiny snow-covered village at quiet midnight, with a few cozy warm amber windows and a faint mistlike pale-green aurora in the sky. Small timber cottages clustered only at lower edges, distant snow-covered pines and mountains, broad soft navy and slate-blue sky and untouched snowy ground provide calm negative space. Aurora is understated and very low contrast, not a bright band. Exquisite hand-painted anime background art, soothing nighttime atmosphere. Composition is full-bleed scenery, broad softly shaded low-contrast central space for reading UI text; all bright details restricted to perimeter or lower edges. No characters, text, typography, logos, UI, watermark, frame or border. No busy high-contrast center or neon.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "fri",
+    "period": "morning",
+    "path": "public/wallpapers/fri-morning.webp",
+    "prompt": "Use case: stylized-concept. Asset type: wide 16:9 desktop scenery wallpaper for a coding app. Create one full-bleed original anime scenery background illustration of a pristine alpine lake reflecting snow peaks under sunrise peach clouds. Quiet still pale-blue water fills the broad open middle and foreground center; distant snow-covered mountains are softened by cool morning haze. Dark pine trees and pale rocky shore frame the far side edges. Soft peach glow along mountain ridges, lavender shadows, airy tranquil early morning atmosphere. Refined hand-painted anime background art, delicate brush texture and gentle cinematic atmosphere; natural landscape, not photorealistic, not flat vector. Broad calm low-contrast central space, attractive detailed interest restricted mostly to the perimeter and lower edges, so UI text can remain readable over it. Morning soft light, restful mood. No people, no characters, no text, no logos, no UI, no borders, no watermark, no collage.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "fri",
+    "period": "afternoon",
+    "path": "public/wallpapers/fri-afternoon.webp",
+    "prompt": "Use case: stylized-concept. Asset type: a single 16:9 wide landscape wallpaper for a coding workspace, no UI in the image. Scene: A remote desert oasis hidden in a broad sandstone canyon under a soft dusty pink afternoon sky. Weathered warm coral canyon walls frame the sides; a small still turquoise pool and graceful palms nestle at lower right. Distant canyon floor through the center is a broad calm wash of warm sand and atmospheric haze, with tiny soft clouds above. Style: beautiful painterly anime scenery background art, expressive hand-painted forms and delicate textures, elegant compositions. Lighting: clearly soft afternoon daylight, warm but not harsh. Calm broad low-contrast central space so interface text remains readable, detailed interest at perimeter and lower edges. No people, characters, text, readable station signage, logos, borders or watermarks. Generate exactly one finished wallpaper.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "fri",
+    "period": "night",
+    "path": "public/wallpapers/fri-night.webp",
+    "prompt": "Use case: stylized-concept. Asset type: calm desktop coding-app wallpaper, wide landscape 16:9. An original painterly anime scenery of a solitary coastal lighthouse on the far right cliff above a moonlit indigo sea. Soft waves and dark rocky shore along lower edge, a small lighthouse warm glow, veiled silver moon near upper outer edge. Broad open low-contrast dark-blue sky and smooth ocean form a peaceful central reading area. Muted indigo, soft steel blue, tiny amber accent. No harsh beam across center. Exquisite hand-painted anime background art, soothing nighttime atmosphere. Composition is full-bleed scenery, broad softly shaded low-contrast central space for reading UI text; all bright details restricted to perimeter or lower edges. No characters, text, typography, logos, UI, watermark, frame or border. No busy high-contrast center or neon.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "sat",
+    "period": "morning",
+    "path": "public/wallpapers/sat-morning.webp",
+    "prompt": "Use case: stylized-concept. Asset type: wide 16:9 desktop scenery wallpaper for a coding app. Create one full-bleed original anime scenery background illustration of a peaceful mossy forest clearing with a small stream and early morning sunbeams. Ancient trees frame the left and right edges; mossy stones, tiny ferns and a gentle stream decorate the lower edges. The central clearing recedes into a broad airy space of soft green mist with shafts of warm morning light. Fresh emerald, sage and pale gold palette; enchanted but natural and grounded. Refined hand-painted anime background art, delicate brush texture and gentle cinematic atmosphere; natural landscape, not photorealistic, not flat vector. Broad calm low-contrast central space, attractive detailed interest restricted mostly to the perimeter and lower edges, so UI text can remain readable over it. Morning soft light, restful mood. No people, no characters, no text, no logos, no UI, no borders, no watermark, no collage.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "sat",
+    "period": "afternoon",
+    "path": "public/wallpapers/sat-afternoon.webp",
+    "prompt": "Use case: stylized-concept. Asset type: a single 16:9 wide landscape wallpaper for a coding workspace, no UI in the image. Scene: A lush tropical waterfall descending from the far-left rocky jungle wall into a turquoise lagoon in the afternoon. Moss, large tropical leaves, and soft palms frame the side and lower edges. A vast calm aquamarine lagoon stretches through the open central view, hazy jungle ridge and pale warm blue sky beyond, tiny softly lit clouds. Serene island paradise. Style: beautiful painterly anime scenery background art, expressive hand-painted forms and delicate textures, elegant compositions. Lighting: clearly soft afternoon daylight, warm but not harsh. Calm broad low-contrast central space so interface text remains readable, detailed interest at perimeter and lower edges. No people, characters, text, logos, borders or watermarks. Generate exactly one finished wallpaper.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "sat",
+    "period": "night",
+    "path": "public/wallpapers/sat-night.webp",
+    "prompt": "Use case: stylized-concept. Asset type: calm desktop coding-app wallpaper, wide landscape 16:9. An original painterly anime scenery of a lantern-lit old riverside town and a small stone arched bridge under a dusky plum night sky. Low timber town houses line only the distant riverbanks at lower side edges; very sparse dim amber lanterns reflect in the calm deep plum river. A broad dark softly shaded sky and river make the central area calm and unobstructed. Muted aubergine, slate mauve and gentle warm gold. Bridge low on the horizon, not a giant central object. Lanterns have no writing. Exquisite hand-painted anime background art, soothing nighttime atmosphere. Composition is full-bleed scenery, broad softly shaded low-contrast central space for reading UI text; all bright details restricted to perimeter or lower edges. No characters, text, typography, logos, UI, watermark, frame or border. No busy high-contrast center or neon.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "sun",
+    "period": "morning",
+    "path": "public/wallpapers/sun-morning.webp",
+    "prompt": "Use case: stylized-concept. Asset type: wide 16:9 desktop scenery wallpaper for a coding app. Create one full-bleed original anime scenery background illustration of rolling wildflower hills and distant old-fashioned white windmills in a gentle sunny morning. Flowing soft green hills sweep across the lower half; small clusters of white daisies and pale yellow flowers are scattered along the very bottom edges, with windmills tiny on the far horizon. A broad open soft blue morning sky with airy cream clouds and quiet distant meadow slopes dominate the center. Fresh spring greens, warm buttery light and powder blue. Refined hand-painted anime background art, delicate brush texture and gentle cinematic atmosphere; natural landscape, not photorealistic, not flat vector. Broad calm low-contrast central space, attractive detailed interest restricted mostly to the perimeter and lower edges, so UI text can remain readable over it. Morning soft light, restful mood. No people, no characters, no text, no logos, no UI, no borders, no watermark, no collage.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "sun",
+    "period": "afternoon",
+    "path": "public/wallpapers/sun-afternoon.webp",
+    "prompt": "Use case: stylized-concept. Asset type: a single 16:9 wide landscape wallpaper for a coding workspace, no UI in the image. Scene: A cozy hilltop village with small slate and terracotta rooftops clustered along the lower-left edge amid a glowing golden autumn forest. Far rolling hills fade into warm haze, a few graceful copper-colored branches frame the upper corners, and broad open pale blue sky and softly painted distant hills fill the center. Quiet late afternoon sunlight, welcoming and gentle. Style: beautiful painterly anime scenery background art, expressive hand-painted forms and delicate textures, elegant compositions. Lighting: clearly soft afternoon daylight, warm but not harsh. Calm broad low-contrast central space so interface text remains readable, detailed interest at perimeter and lower edges. No people, characters, text, logos, borders or watermarks. Generate exactly one finished wallpaper.",
+    "generator": "built-in GPT Image"
+  },
+  {
+    "day": "sun",
+    "period": "night",
+    "path": "public/wallpapers/sun-night.webp",
+    "prompt": "Use case: stylized-concept. Asset type: calm desktop coding-app wallpaper, wide landscape 16:9. An original painterly anime scenery of a tiny cozy cabin in a pine forest beside a perfectly still lake under a slender crescent moon. Cabin small at lower left, a single warm window and narrow wooden jetty, pine silhouettes frame side edges, misty distant wooded hills remain low. Broad softly shaded midnight teal sky and calm lake create peaceful open space in the center. Moon high near an outer corner, sparse stars. Deep pine green, soft blue teal, tiny honey amber light. Exquisite hand-painted anime background art, soothing nighttime atmosphere. Composition is full-bleed scenery, broad softly shaded low-contrast central space for reading UI text; all bright details restricted to perimeter or lower edges. No characters, text, typography, logos, UI, watermark, frame or border. No busy high-contrast center or neon.",
+    "generator": "built-in GPT Image"
+  }
+]

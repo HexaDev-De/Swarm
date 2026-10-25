@@ -1,0 +1,2 @@
+/* Loaded only without JavaScript: the hero arrives already in place. */
+html .hero .rise, html .hero-copy > *, html .hero-product { animation: none !important; }
