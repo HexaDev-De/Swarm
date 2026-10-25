@@ -118,4 +118,4 @@ jobs:
 
           cd release-suite
           ls -la
-          gh release upload "$TAG" * --clobber
+          find . -maxdepth 1 -type f -size +0c -exec gh release upload "$TAG" {} --clobber +

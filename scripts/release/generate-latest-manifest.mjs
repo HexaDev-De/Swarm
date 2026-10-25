@@ -8,7 +8,11 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 export async function readSignature(filePath) {
   try {
     const content = await readFile(filePath, 'utf8');
-    return content.trim();
+    const trimmed = content.trim();
+    if (trimmed.includes('unsigned release artifact')) {
+      return '';
+    }
+    return trimmed;
   } catch {
     return '';
   }

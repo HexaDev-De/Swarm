@@ -53,6 +53,9 @@ async function main() {
       try {
         sigContent = await readFile(sigSrc, 'utf8');
       } catch {}
+      if (!sigContent.trim()) {
+        sigContent = 'untrusted comment: unsigned release artifact\n';
+      }
       await writeFile(resolve(outDir, 'Swarm-Linux-x86_64.AppImage.sig'), sigContent);
       console.log(`Standardized Linux artifacts in ${outDir}`);
     }
@@ -70,6 +73,9 @@ async function main() {
       try {
         sigContent = await readFile(sigSrc, 'utf8');
       } catch {}
+      if (!sigContent.trim()) {
+        sigContent = 'untrusted comment: unsigned release artifact\n';
+      }
       await writeFile(resolve(outDir, 'Swarm-Windows-x64-setup.exe.sig'), sigContent);
       console.log(`Standardized Windows artifacts in ${outDir}`);
     }
@@ -93,6 +99,9 @@ async function main() {
       try {
         sigContent = await readFile(sigSrc, 'utf8');
       } catch {}
+      if (!sigContent.trim()) {
+        sigContent = 'untrusted comment: unsigned release artifact\n';
+      }
       await writeFile(resolve(outDir, 'Swarm-macOS-arm64.app.tar.gz.sig'), sigContent);
       console.log(`Standardized macOS update archive and signature in ${outDir}`);
     }
