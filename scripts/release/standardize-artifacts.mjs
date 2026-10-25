@@ -72,11 +72,8 @@ async function main() {
       }
 
       const dest = resolve(outDir, 'Swarm-Linux-x86_64.AppImage');
-      const versioned = resolve(outDir, `Swarm_${ver}-Linux-amd64.AppImage`);
       await copyFile(src, dest);
-      await copyFile(src, versioned);
       await chmod(dest, 0o755);
-      await chmod(versioned, 0o755);
       const digest = await sha256File(dest);
       await writeFile(`${dest}.sha256`, `${digest}  Swarm-Linux-x86_64.AppImage\n`);
 

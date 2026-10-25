@@ -5,14 +5,18 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 
+export function sanitizeSignature(rawSig) {
+  if (!rawSig) return '';
+  const lines = rawSig.trim().split(/\r?\n/);
+  const candidate = lines.length >= 2 ? lines[1].trim() : lines[0].trim();
+  const isBase64 = /^[A-Za-z0-9+/=]+$/.test(candidate) && candidate.length > 20;
+  return isBase64 ? candidate : '';
+}
+
 export async function readSignature(filePath) {
   try {
     const content = await readFile(filePath, 'utf8');
-    const trimmed = content.trim();
-    if (trimmed.includes('unsigned release artifact')) {
-      return '';
-    }
-    return trimmed;
+    return sanitizeSignature(content);
   } catch {
     return '';
   }
@@ -26,24 +30,24 @@ export async function generateLatestManifest(assetsDir, releaseVersion, reposito
   const pubDate = new Date().toISOString();
   const v = releaseVersion.replace(/^v/, '');
 
+  const platforms = {};
+  const addPlatform = (target, sig, url) => {
+    const entry = { url };
+    if (sig) {
+      entry.signature = sig;
+    }
+    platforms[target] = entry;
+  };
+
+  addPlatform('darwin-aarch64', darwinSig, `https://github.com/${repository}/releases/download/v${v}/Swarm-macOS-arm64.app.tar.gz`);
+  addPlatform('windows-x86_64', windowsSig, `https://github.com/${repository}/releases/download/v${v}/Swarm-Windows-x64-setup.exe`);
+  addPlatform('linux-x86_64', linuxSig, `https://github.com/${repository}/releases/download/v${v}/Swarm-Linux-x86_64.AppImage`);
+
   return {
     version: v,
     notes: `Swarm v${v}: Multi-Agent AI Coding Workspace`,
     pub_date: pubDate,
-    platforms: {
-      'darwin-aarch64': {
-        signature: darwinSig,
-        url: `https://github.com/${repository}/releases/download/v${v}/Swarm-macOS-arm64.app.tar.gz`
-      },
-      'windows-x86_64': {
-        signature: windowsSig,
-        url: `https://github.com/${repository}/releases/download/v${v}/Swarm-Windows-x64-setup.exe`
-      },
-      'linux-x86_64': {
-        signature: linuxSig,
-        url: `https://github.com/${repository}/releases/download/v${v}/Swarm-Linux-x86_64.AppImage`
-      }
-    }
+    platforms
   };
 }
 

@@ -54,15 +54,9 @@ jobs:
       - name: Build Tauri Frontend & Rust Binary
         uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          tagName: v__VERSION__
-          releaseName: 'Swarm v__VERSION__'
-          releaseBody: 'See release notes in releases/__VERSION__.md or README.md. Download the native desktop client for macOS, Windows, or Linux below.'
-          releaseDraft: false
-          prerelease: false
           args: --target ${{ matrix.target }}
 
       - name: Standardize Artifacts & Checksums
@@ -118,6 +112,20 @@ jobs:
 
           echo "Using release notes from $NOTES_FILE"
           gh release edit "$TAG" --notes-file "$NOTES_FILE" || gh release create "$TAG" --title "Swarm $TAG" --notes-file "$NOTES_FILE"
+
+          echo "Pruning any non-standard assets from $TAG..."
+          gh release view "$TAG" --json assets --jq '.assets[].name' 2>/dev/null | while read -r asset; do
+            case "$asset" in
+              Swarm-Linux-x86_64.AppImage*|Swarm-Windows-x64-setup.exe*|Swarm-macOS-arm64.dmg*|Swarm-macOS-arm64.app.tar.gz*|latest.json)
+                ;;
+              *)
+                if [ -n "$asset" ]; then
+                  echo "Pruning extraneous release asset: $asset"
+                  gh release delete-asset "$TAG" "$asset" -y || true
+                fi
+                ;;
+            esac
+          done
 
           cd release-suite
           ls -la

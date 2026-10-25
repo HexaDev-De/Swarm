@@ -3153,7 +3153,8 @@ async fn run_process_with_tools(
     let mut buf = [0u8; 8192];
     let mut stopped = false;
     let mut input_open = true;
-    let mut deadline = tokio::time::Instant::now() + Duration::from_secs(90);
+    let initial_timeout = if protocol.config.provider == "antigravity" { 180 } else { 90 };
+    let mut deadline = tokio::time::Instant::now() + Duration::from_secs(initial_timeout);
     let result=async {
         write_json(&mut stdin,&protocol.initial()).await?;
         if protocol.config.provider == "antigravity" {
@@ -3199,7 +3200,7 @@ async fn run_process_with_tools(
                     }
                     apply_step(&mut protocol,Step::default(),&sink,&mut stdin,&mut jobs,&mut queued).await?;
                 },
-                _=tokio::time::sleep_until(deadline),if stopped || protocol.phase==0=>{
+                _=tokio::time::sleep_until(deadline),if (stopped || protocol.phase==0) && jobs.is_empty() && queued.is_empty() =>{
                     if stopped{break Ok(());}break Err("Agent initialization timed out. Check the CLI's login and configuration in a terminal.".into());
                 },
                 _=tokio::time::sleep_until(protocol.goals.deadline().unwrap_or_else(||tokio::time::Instant::now()+Duration::from_secs(86400))),if protocol.goals.deadline().is_some()=>{
@@ -3226,6 +3227,10 @@ async fn run_process_with_tools(
                             continue;
                         }
                         let step=protocol.receive(value)?;
+                        // Any received message from the child process proves it has initialized
+                        if protocol.phase == 0 {
+                            protocol.phase = 1;
+                        }
                         if apply_step(&mut protocol,step,&sink,&mut stdin,&mut jobs,&mut queued).await? {return Ok(());}
                     }
                     bytes.drain(..consumed);

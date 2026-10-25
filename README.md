@@ -2,9 +2,9 @@
   <img src="public/icon.png" alt="Swarm Logo" width="128" height="128">
 </p>
 
-# Swarm (v0.1.0)
+# Swarm 
 
-**Swarm v0.1.0 is built on and forked from [PandaCode v0.3.16](https://github.com/aicodeking/pandacode) under the [Swarm License](LICENSE).**
+**Swarm is built on and forked from [PandaCode v0.3.16](https://github.com/aicodeking/pandacode) under the [Swarm License](LICENSE).**
 
 Swarm is an open-source, blazing-fast native desktop workspace for autonomous coding agents and software engineering teams. It runs the leading coding CLIs and agent harnesses you already use — **Claude Code, Codex, Kimi Code, OpenCode, GLM Coding Plan, Xiaomi MiMo** (through Claude Code), **Antigravity, xAI Grok Build** (through ACP), **Pi** (through RPC mode), and **DeepSeek** (through ACP) — side-by-side in a unified, multi-agent workspace with local Git, dual-harness racing, an interactive visual design canvas, a terminal, and an integrated browser.
 
@@ -13,12 +13,11 @@ There are **no accounts**, **no subscriptions**, **no license checks**, and **ze
 Built natively with **Tauri 2**, **Rust**, **SQLite**, and vanilla TypeScript. Swarm leverages your operating system's native webview (WebKit / WebView2) without bundled Chromium binaries, resident Node.js server overhead, heavy React runtimes, or sluggish web editor engines.
 
 <p align="center">
-  <b>Official v0.1.0 Downloads:</b>
-  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.1.0/Swarm_0.1.0_aarch64.dmg">macOS (Apple Silicon)</a> ·
-  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.1.0/Swarm_0.1.0_x64-setup.exe">Windows x64</a> ·
-  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.1.0/Swarm_0.1.0_amd64.AppImage">Linux x86_64 AppImage</a> ·
-  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.1.0/Swarm_0.1.0_amd64.deb">Linux .deb</a> ·
-  <a href="https://github.com/HexaDev-De/Swarm/releases/tag/v0.1.0">All Releases</a>
+  <b>Official v0.1.2 Downloads:</b>
+  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.1.2/Swarm-macOS-arm64.dmg">macOS (Apple Silicon)</a> ·
+  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.1.2/Swarm-Windows-x64-setup.exe">Windows x64</a> ·
+  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.1.2/Swarm-Linux-x86_64.AppImage">Linux x86_64 AppImage</a> ·
+  <a href="https://github.com/HexaDev-De/Swarm/releases/tag/v0.1.2">All Releases</a>
 </p>
 
 ---

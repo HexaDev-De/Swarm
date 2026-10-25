@@ -163,6 +163,7 @@ export function createVoiceVibe(): VoiceVibeController {
   }
 
   function stop(): void {
+    isVoiceActive = false;
     if (!recording) return;
     recording = false;
     if (recognition) {
@@ -190,22 +191,22 @@ export function createVoiceVibe(): VoiceVibeController {
     }
   }
 
-  // Hotkey push-to-talk handler (F8 or Right Alt)
-  let pttActive = false;
+  // Hotkey push-to-talk handler (F8)
+  let isVoiceActive = false;
   function onKeyDown(e: KeyboardEvent): void {
     if (e.key === 'F8') {
       e.preventDefault();
-      if (!pttActive && !recording) {
-        pttActive = true;
-        void start();
-      }
+      if (e.repeat || isVoiceActive || recording) return;
+      isVoiceActive = true;
+      void start();
     }
   }
 
   function onKeyUp(e: KeyboardEvent): void {
-    if (e.key === 'F8' && pttActive) {
+    if (e.key === 'F8') {
       e.preventDefault();
-      pttActive = false;
+      if (!isVoiceActive && !recording) return;
+      isVoiceActive = false;
       stop();
     }
   }

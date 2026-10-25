@@ -257,6 +257,7 @@ impl Protocol {
                     if self.remote_id.is_empty() {
                         return Err("ACP did not return a session ID".into());
                     }
+                    self.phase = 1;
                     self.acp_config = result.clone();
                     if let Some(bytes) = self.early_kimi_commands.take() {
                         if let Ok(frame) = serde_json::from_slice::<Value>(&bytes) {
@@ -375,6 +376,9 @@ impl Protocol {
         // share the same schema as Kimi, without Kimi's initialization rules.
         // Provider observations gathered above lead the shared step.
         let mut inner = self.kimi(value)?;
+        if !inner.events.is_empty() || !inner.calls.is_empty() || !inner.write.is_empty() {
+            self.phase = 1;
+        }
         if step.events.is_empty() && step.write.is_empty() {
             return Ok(inner);
         }
@@ -1028,7 +1032,7 @@ mod tests {
         let step=p.receive(response(5,json!({"configOptions":[{"id":"variant","category":"thought_level","type":"select","currentValue":"low","options":[{"value":"low"},{"value":"high"}]}]}))).unwrap();
         assert_eq!(step.write[0]["params"]["configId"], "variant");
         assert_eq!(step.write[0]["params"]["value"], "high");
-        assert_eq!(p.phase, 0);
+        assert_eq!(p.phase, 1);
         assert_eq!(
             p.receive(response(6, json!({}))).unwrap().write[0]["method"],
             "session/prompt"

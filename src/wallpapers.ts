@@ -1,3 +1,4 @@
+import { convertFileSrc } from '@tauri-apps/api/core';
 import { extractDominantAccent } from './wallpaper-accent-extractor.ts';
 
 async function updatePalette(id: string, hex?: string): Promise<void> {
@@ -12,37 +13,45 @@ export async function resolveVideoBlobUrl(pathOrUrl: string): Promise<string> {
   return resolveWallpaperUrl(pathOrUrl);
 }
 
-function toAssetUrl(path: string): string {
-  if (typeof window === 'undefined') return path;
-  try {
-    const internals = (window as any).__TAURI_INTERNALS__;
-    if (internals && typeof internals.convertFileSrc === 'function') {
-      return internals.convertFileSrc(path, 'asset');
-    }
-  } catch { /* Fallback */ }
-  return path;
-}
+export function resolveWallpaperUrl(pathOrUrl: string): string {
+  if (!pathOrUrl) return '';
 
-export function resolveWallpaperUrl(url: string): string {
-  if (!url) return '';
+  // Pass-through remote URLs and public web assets
   if (
-    url.startsWith('http://asset.localhost/') ||
-    url.startsWith('https://asset.localhost/') ||
-    url.startsWith('asset://') ||
-    url.startsWith('data:') ||
-    url.startsWith('blob:') ||
-    url.startsWith('/wallpapers/')
+    pathOrUrl.startsWith('http://') ||
+    pathOrUrl.startsWith('https://') ||
+    pathOrUrl.startsWith('data:') ||
+    pathOrUrl.startsWith('blob:') ||
+    pathOrUrl.startsWith('asset:') ||
+    pathOrUrl.startsWith('/')
   ) {
-    return url;
+    return pathOrUrl;
   }
-  if (url.startsWith('file://')) {
-    const raw = decodeURIComponent(url.replace(/^file:\/\//, ''));
-    return toAssetUrl(raw);
+
+  // Handle file:// protocol prefix if present
+  let cleanPath = pathOrUrl;
+  if (cleanPath.startsWith('file:///')) {
+    cleanPath = decodeURIComponent(cleanPath.replace(/^file:\/\/\/?/, ''));
+    if (!/^[a-zA-Z]:/.test(cleanPath)) {
+      cleanPath = '/' + cleanPath;
+    }
+  } else if (cleanPath.startsWith('file://')) {
+    cleanPath = decodeURIComponent(cleanPath.replace(/^file:\/\//, ''));
   }
-  if (url.startsWith('/') || /^[a-zA-Z]:[\\/]/.test(url)) {
-    return toAssetUrl(url);
+
+  // Normalize Windows backslashes to forward slashes
+  const normalized = cleanPath.replace(/\\/g, '/');
+
+  // Convert to WebView2-safe asset protocol URL
+  if (typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__?.convertFileSrc) {
+    try {
+      return convertFileSrc(normalized);
+    } catch {
+      return normalized;
+    }
   }
-  return toAssetUrl(url);
+
+  return normalized;
 }
 
 export const wallpaperSets = [
