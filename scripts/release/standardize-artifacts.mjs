@@ -1,9 +1,11 @@
 // Standardizes build artifacts into stable release names, generates sha256 checksums,
 // and preserves Tauri update signatures across macOS, Linux, and Windows.
-import { readdir, readFile, writeFile, mkdir, copyFile } from 'node:fs/promises';
+import { readdir, readFile, writeFile, mkdir, copyFile, chmod } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { repackAppImage } from './appimage.mjs';
+import { run } from './common.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 
@@ -28,6 +30,16 @@ async function sha256File(filePath) {
   return createHash('sha256').update(content).digest('hex');
 }
 
+async function signingEnvironment(env) {
+  const key = env.TAURI_SIGNING_PRIVATE_KEY?.trim();
+  if (!key) return env;
+  try {
+    return { ...env, TAURI_SIGNING_PRIVATE_KEY: (await readFile(key, 'utf8')).trim() };
+  } catch {
+    return env;
+  }
+}
+
 async function main() {
   const platform = process.argv[2] || process.platform;
   const pkg = JSON.parse(await readFile(resolve(root, 'package.json'), 'utf8'));
@@ -41,10 +53,30 @@ async function main() {
     const appImages = await findFiles(targetDir, name => name.endsWith('.AppImage') && !name.endsWith('.AppImage.sig'));
     if (appImages.length > 0) {
       const src = appImages[0];
+      try {
+        console.log(`Repacking Linux AppImage to drop bundled Wayland libraries: ${src}`);
+        await repackAppImage(src, { log: message => console.log(message) });
+      } catch (err) {
+        console.warn(`repackAppImage warning: ${err.message}`);
+      }
+
+      if (process.env.TAURI_SIGNING_PRIVATE_KEY) {
+        try {
+          const tauriCli = resolve(root, 'node_modules/@tauri-apps/cli/tauri.js');
+          const signEnv = await signingEnvironment(process.env);
+          await run(process.execPath, [tauriCli, 'signer', 'sign', src], { env: signEnv });
+          console.log(`Resigned repacked AppImage: ${src}`);
+        } catch (e) {
+          console.warn(`Could not resign AppImage: ${e.message}`);
+        }
+      }
+
       const dest = resolve(outDir, 'Swarm-Linux-x86_64.AppImage');
       const versioned = resolve(outDir, `Swarm_${ver}-Linux-amd64.AppImage`);
       await copyFile(src, dest);
       await copyFile(src, versioned);
+      await chmod(dest, 0o755);
+      await chmod(versioned, 0o755);
       const digest = await sha256File(dest);
       await writeFile(`${dest}.sha256`, `${digest}  Swarm-Linux-x86_64.AppImage\n`);
 
