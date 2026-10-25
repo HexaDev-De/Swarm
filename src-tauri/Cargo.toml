@@ -1,6 +1,6 @@
 [package]
 name = "pandacode"
-version = "0.1.0"
+version = "0.1.1"
 description = "Swarm — Multi-Agent AI Coding Workspace"
 authors = ["HexaDev-De"]
 repository = "https://github.com/HexaDev-De/Swarm"
@@ -16,7 +16,7 @@ crate-type = ["rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = ["macos-private-api", "unstable", "protocol-asset"] }
+tauri = { version = "2", features = ["macos-private-api", "unstable", "protocol-asset", "devtools"] }
 tauri-plugin-dialog = "2"
 tauri-plugin-global-shortcut = "2"
 image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp"] }

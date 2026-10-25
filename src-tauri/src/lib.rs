@@ -2940,10 +2940,28 @@ async fn list_local_servers() -> Result<Vec<local_servers::LocalServer>> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 /// Process-wide setup that must happen before any thread or child process starts.
 pub fn prepare_environment() {
+    #[cfg(target_os = "linux")]
+    {
+        if std::env::var("WEBKIT_DISABLE_COMPOSITING_MODE").is_err() {
+            std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
+        }
+        if std::env::var("WEBKIT_DISABLE_DMABUF_RENDERER").is_err() {
+            std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+        }
+    }
     providers::widen_process_path();
 }
 
 pub fn run() {
+    #[cfg(target_os = "linux")]
+    {
+        if std::env::var("WEBKIT_DISABLE_COMPOSITING_MODE").is_err() {
+            std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
+        }
+        if std::env::var("WEBKIT_DISABLE_DMABUF_RENDERER").is_err() {
+            std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+        }
+    }
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         // Updates come only from GitHub Releases, verified against the public key in tauri.conf.json.
