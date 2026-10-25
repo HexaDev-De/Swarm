@@ -2942,6 +2942,9 @@ async fn list_local_servers() -> Result<Vec<local_servers::LocalServer>> {
 pub fn prepare_environment() {
     #[cfg(target_os = "linux")]
     {
+        if std::env::var("GDK_BACKEND").is_err() {
+            std::env::set_var("GDK_BACKEND", "x11,wayland");
+        }
         if std::env::var("WEBKIT_DISABLE_COMPOSITING_MODE").is_err() {
             std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
         }
@@ -2955,6 +2958,9 @@ pub fn prepare_environment() {
 pub fn run() {
     #[cfg(target_os = "linux")]
     {
+        if std::env::var("GDK_BACKEND").is_err() {
+            std::env::set_var("GDK_BACKEND", "x11,wayland");
+        }
         if std::env::var("WEBKIT_DISABLE_COMPOSITING_MODE").is_err() {
             std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
         }

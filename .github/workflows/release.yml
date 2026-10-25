@@ -1,4 +1,4 @@
-name: "Release Swarm v0.1.0"
+name: "Release Swarm"
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
 
 jobs:
   release:
+    name: "Build ${{ matrix.platform }} (${{ matrix.target }})"
     permissions:
       contents: write
     strategy:
@@ -54,6 +55,8 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: v__VERSION__
           releaseName: 'Swarm v__VERSION__'
@@ -61,3 +64,58 @@ jobs:
           releaseDraft: false
           prerelease: false
           args: --target ${{ matrix.target }}
+
+      - name: Standardize Artifacts & Checksums
+        run: node scripts/release/standardize-artifacts.mjs ${{ matrix.platform }}
+
+      - name: Upload Standardized Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-${{ matrix.platform }}
+          path: dist-artifacts/*
+
+  publish:
+    name: "Publish Full Release Suite & latest.json"
+    needs: release
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download All Standardized Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-suite
+          merge-multiple: true
+
+      - name: Generate latest.json Manifest
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          node scripts/release/generate-latest-manifest.mjs release-suite "$VERSION"
+
+      - name: Inject Dynamic Release Notes & Upload Suite
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          echo "Finalizing release for $TAG (v$VERSION)..."
+
+          NOTES_FILE="releases/${VERSION}.md"
+          if [ ! -f "$NOTES_FILE" ]; then
+            NOTES_FILE="README.md"
+          fi
+
+          echo "Using release notes from $NOTES_FILE"
+          gh release edit "$TAG" --notes-file "$NOTES_FILE" || gh release create "$TAG" --title "Swarm $TAG" --notes-file "$NOTES_FILE"
+
+          cd release-suite
+          ls -la
+          gh release upload "$TAG" * --clobber

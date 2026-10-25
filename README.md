@@ -139,14 +139,15 @@ Swarm only accesses the network for services you explicitly configure. The follo
 
 ## 📦 Installation
 
-Download the official pre-compiled native installer for your operating system:
+### 📥 Official Platform Installers (v0.1.1)
 
-| Platform | Installer Package | Architecture | OS Compatibility |
+| Platform | Installer | Checksum | Auto-Update Archive |
 | :--- | :--- | :--- | :--- |
-| **macOS** | [`Swarm_0.1.0_aarch64.dmg`](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.0/Swarm_0.1.0_aarch64.dmg) | Apple Silicon (arm64) | macOS 12+ (Monterey, Ventura, Sonoma, Sequoia) |
-| **Windows** | [`Swarm_0.1.0_x64-setup.exe`](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.0/Swarm_0.1.0_x64-setup.exe) | x64 (64-bit) | Windows 10 (1809+) or Windows 11 |
-| **Linux (AppImage)** | [`Swarm_0.1.0_amd64.AppImage`](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.0/Swarm_0.1.0_amd64.AppImage) | x86_64 | Ubuntu 22.04+, Arch Linux, Fedora 38+, Debian 12+ |
-| **Linux (Debian/Ubuntu)** | [`Swarm_0.1.0_amd64.deb`](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.0/Swarm_0.1.0_amd64.deb) | x86_64 | Debian / Ubuntu derivative distributions |
+| **Linux (x86_64)** | [`Swarm-Linux-x86_64.AppImage`](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/Swarm-Linux-x86_64.AppImage) | [SHA-256](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/Swarm-Linux-x86_64.AppImage.sha256) | [Signature](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/Swarm-Linux-x86_64.AppImage.sig) |
+| **Windows (x64)** | [`Swarm-Windows-x64-setup.exe`](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/Swarm-Windows-x64-setup.exe) | [SHA-256](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/Swarm-Windows-x64-setup.exe.sha256) | [Signature](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/Swarm-Windows-x64-setup.exe.sig) |
+| **macOS (Apple Silicon)** | [`Swarm-macOS-arm64.dmg`](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/Swarm-macOS-arm64.dmg) | [SHA-256](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/Swarm-macOS-arm64.dmg.sha256) | [`Swarm-macOS-arm64.app.tar.gz`](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/Swarm-macOS-arm64.app.tar.gz) ([Signature](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/Swarm-macOS-arm64.app.tar.gz.sig)) |
+
+> Universal auto-updater manifest: [`latest.json`](https://github.com/HexaDev-De/Swarm/releases/download/v0.1.1/latest.json) | Release notes: [releases/0.1.1.md](releases/0.1.1.md)
 
 ---
 

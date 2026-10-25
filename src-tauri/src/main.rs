@@ -2,7 +2,10 @@
 fn main() {
     #[cfg(target_os = "linux")]
     {
-        // Fix WebKitGTK black screen / blank window on Linux WebKit renderers
+        // Enforce X11/XWayland fallback and bypass broken EGL/DMABuf drivers
+        if std::env::var("GDK_BACKEND").is_err() {
+            std::env::set_var("GDK_BACKEND", "x11,wayland");
+        }
         if std::env::var("WEBKIT_DISABLE_COMPOSITING_MODE").is_err() {
             std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
         }
