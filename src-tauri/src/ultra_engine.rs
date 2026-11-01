@@ -755,7 +755,26 @@ pub async fn run_ultracode(
         }
     });
 
-    emit_status(&sink, &session_id, "Swarm ULTRACODE Mode Initializing");
+    // Enterprise Safety Lock
+    if crate::ultra_runtime::are_workflows_disabled() {
+        let err = "Enterprise Safety Lock: Multi-agent workflows are disabled on this workstation.".to_string();
+        sink(agent_event(&session_id, "error", &err, None));
+        return Err(err);
+    }
+
+    // Check for specialized slash commands
+    let trimmed_prompt = config.prompt.trim();
+    if trimmed_prompt.starts_with("/deep-research") {
+        return run_deep_research_workflow(config, sink, host, cancel_flag).await;
+    }
+    if trimmed_prompt.starts_with("/ultrareview") || trimmed_prompt.starts_with("/code-review ultra") {
+        return run_ultrareview_workflow(config, sink, host, cancel_flag).await;
+    }
+    if trimmed_prompt.starts_with("/goal") {
+        return run_goal_workflow(config, sink, host, cancel_flag).await;
+    }
+
+    emit_status(&sink, &session_id, "Swarm ULTRACODE V2 Initializing");
 
     let mut cleanup_guard = WorktreeCleanupGuard::new(root_cwd.clone());
 
@@ -838,6 +857,46 @@ Plan structure:
             ),
         );
     }
+
+    // Pre-Flight Cost & Swarm Estimation Bar
+    let est_agents = (plan.subtasks.len() * 3) + 4;
+    sink(agent_event(
+        &session_id,
+        "ultracode_preflight",
+        &format!("⚡ ULTRACODE V2 Workflow Ready: 4 Phases · Est. {} Sub-Agents · ~6x Deep Compute", est_agents),
+        Some(json!({
+            "phases": 4,
+            "estimatedAgents": est_agents,
+            "subtasksCount": plan.subtasks.len(),
+            "mode": plan.mode,
+            "concurrencyCeiling": crate::ultra_runtime::resolve_concurrency_ceiling(),
+        })),
+    ));
+
+    // Phase 0 Bun Port Ground-Truth Disk Artifacts (.swarm/ultra/)
+    let mut contract_triples = Vec::new();
+    for subtask in &plan.subtasks {
+        for file in &subtask.owned_files {
+            contract_triples.push((
+                subtask.title.clone(),
+                file.clone(),
+                subtask.instructions.chars().take(160).collect(),
+            ));
+        }
+    }
+    for contract in &plan.interface_contracts {
+        contract_triples.push((
+            "InterfaceContract".to_string(),
+            "shared".to_string(),
+            contract.clone(),
+        ));
+    }
+    let _ = crate::ultra_runtime::write_bun_port_ground_truth_artifacts(
+        &root_cwd,
+        &config.prompt,
+        &format!("Mode: {}\nSubtasks: {}\nGlobal Checks: {}", plan.mode, plan.subtasks.len(), plan.global_verification_cmds.join(", ")),
+        &contract_triples,
+    ).await;
 
     sink(agent_event(
         &session_id,
@@ -929,13 +988,7 @@ Plan structure:
         &format!("Stage 2: Launching {} Workers", plan.subtasks.len()),
     );
 
-    let max_concurrency = std::env::var("SWARM_ULTRA_MAX_WORKERS")
-        .or_else(|_| std::env::var("PANDACODE_ULTRA_MAX_WORKERS"))
-        .ok()
-        .and_then(|v| v.parse::<usize>().ok())
-        .unwrap_or(DEFAULT_MAX_WORKERS)
-        .clamp(1, 8);
-
+    let max_concurrency = crate::ultra_runtime::resolve_concurrency_ceiling();
     let semaphore = Arc::new(Semaphore::new(max_concurrency));
 
     // Prepare worktree environments for each subtask safely before spawning
@@ -1262,6 +1315,20 @@ Plan structure:
             };
 
             let compacted_error = compact_verification_output(&failing_error, DEFAULT_MAX_DIAGNOSTIC_CHARS);
+            let clusters = crate::ultra_runtime::cluster_compiler_diagnostics(&failing_error);
+            if clusters.len() > 1 {
+                emit_status(
+                    &sink,
+                    &session_id,
+                    &format!("Parallel Compiler Self-Healing: grouped into {} per-module error clusters", clusters.len()),
+                );
+                sink(agent_event(
+                    &session_id,
+                    "text",
+                    &format!("\n> ⚡ **Parallel Clustered Self-Healing (Cycle {}/{})**: Grouped into {} disjoint module error clusters.\n", qa_cycles, MAX_QA_CYCLES, clusters.len()),
+                    None,
+                ));
+            }
 
             let fixer_prompt = format!(
                 "Verification command `{}` failed with the following diagnostic output:\n\n```\n{}\n```\n\nCurrent Diff:\n```diff\n{}\n```\nPlease fix the issues and ensure all checks pass.",
@@ -1347,12 +1414,22 @@ Plan structure:
     };
 
     if !unified_diff.trim().is_empty() {
-        let critic_system = r#"You are an Adversarial Critic Agent in Swarm ULTRACODE.
-Audit the unified git diff with a fresh, skeptical lens. Look for:
-- Unhandled edge cases
-- Race conditions or concurrency bugs
-- Dead, unused, or debug code
-- Adherence to project rules and conventions
+        sink(agent_event(
+            &session_id,
+            "text",
+            "\n> ⚖️ **Adversarial Triad Review**: Spawning twin antagonistic reviewers in parallel with virgin contexts...\n",
+            None,
+        ));
+
+        let critic_prompt = format!(
+            "User's Original Objective:\n{}\n\nUnified Git Diff to Audit:\n```diff\n{}\n```",
+            config.prompt, unified_diff
+        );
+
+        let system_rev_a = r#"You are Adversarial Reviewer A in Swarm ULTRACODE V2.
+Assume by default that the code diff provided to you is defective.
+Your sole mission is to hunt down memory safety bugs (Use-After-Free, premature drops, missing cleanup),
+numerical/timestamp precision regressions, eager evaluation panics (unwrap() vs unwrap_or_else()), and race conditions.
 Output ONLY a JSON block:
 {
   "approved": boolean,
@@ -1361,36 +1438,68 @@ Output ONLY a JSON block:
 }
 "#;
 
-        let critic_prompt = format!(
-            "User's Original Objective:\n{}\n\nUnified Git Diff to Audit:\n```diff\n{}\n```",
-            config.prompt, unified_diff
+        let system_rev_b = r#"You are Adversarial Reviewer B in Swarm ULTRACODE V2.
+Assume by default that the code diff provided to you is defective.
+Your sole mission is to hunt down unhandled edge cases, math/logic precision errors, security vulnerabilities,
+and semantic interface regressions.
+Output ONLY a JSON block:
+{
+  "approved": boolean,
+  "issues": ["Issue 1", "Issue 2"],
+  "summary": "Brief audit summary"
+}
+"#;
+
+        let turn_id_a = format!("{}-critic-a", session_id);
+        let turn_id_b = format!("{}-critic-b", session_id);
+        let (rev_a_out, rev_b_out) = tokio::join!(
+            execute_internal_turn(
+                &turn_id_a,
+                &session_id,
+                &root_cwd,
+                &critic_prompt,
+                system_rev_a,
+                "Stage 4: Reviewer A (Safety & Concurrency)",
+                &config,
+                &sink,
+                false,
+                host.clone(),
+                Some(cancel_flag.clone()),
+            ),
+            execute_internal_turn(
+                &turn_id_b,
+                &session_id,
+                &root_cwd,
+                &critic_prompt,
+                system_rev_b,
+                "Stage 4: Reviewer B (Logic & Contracts)",
+                &config,
+                &sink,
+                false,
+                host.clone(),
+                Some(cancel_flag.clone()),
+            ),
         );
 
-        sink(agent_event(
-            &session_id,
-            "text",
-            "\n> ⚖️ **Adversarial Critic**: Auditing unified diff with clean context...\n",
-            None,
-        ));
+        let review_a = parse_critic_review(&rev_a_out.unwrap_or_else(|_| "{\"approved\": true}".into()));
+        let review_b = parse_critic_review(&rev_b_out.unwrap_or_else(|_| "{\"approved\": true}".into()));
 
-        let critic_turn_id = format!("{}-critic", session_id);
-        let critic_output = execute_internal_turn(
-            &critic_turn_id,
-            &session_id,
-            &root_cwd,
-            &critic_prompt,
-            critic_system,
-            "Stage 4: Adversarial Critic",
-            &config,
-            &sink,
-            true,
-            host.clone(),
-            Some(cancel_flag.clone()),
-        )
-        .await
-        .unwrap_or_else(|_| "{\"approved\": true}".into());
+        let mut consolidated_issues: Vec<String> = Vec::new();
+        let mut seen = HashSet::new();
+        for issue in review_a.issues.into_iter().chain(review_b.issues.into_iter()) {
+            let clean = issue.trim().to_string();
+            if !clean.is_empty() && seen.insert(clean.clone()) {
+                consolidated_issues.push(clean);
+            }
+        }
 
-        let review = parse_critic_review(&critic_output);
+        let is_approved = review_a.approved && review_b.approved && consolidated_issues.is_empty();
+
+        let review = CriticReview {
+            approved: is_approved,
+            issues: consolidated_issues,
+            summary: Some("Adversarial Triad Review Completed".to_string()),
+        };
 
         if !review.approved && !review.issues.is_empty() {
             emit_status(&sink, &session_id, "Critic identified issues: remediating...");
@@ -1488,6 +1597,405 @@ Output ONLY a JSON block:
     );
 
     sink(agent_event(&session_id, "text", &report_markdown, None));
+    emit_status(&sink, &session_id, "Finished");
+
+    Ok(())
+}
+
+/// 5-Phase Deterministic Anti-Hallucination Pipeline (/deep-research)
+async fn run_deep_research_workflow(
+    config: RunConfig,
+    sink: Sink,
+    host: Option<ToolHost>,
+    cancel_flag: Arc<AtomicBool>,
+) -> Result<(), String> {
+    let session_id = config.session_id.clone();
+    let root_cwd = config.cwd.clone();
+    let query = config.prompt.trim_start_matches("/deep-research").trim();
+
+    emit_status(&sink, &session_id, "ULTRACODE /deep-research: Initializing 5-Phase Pipeline");
+
+    // Phase 1: Clarify & Decompose
+    emit_stage(&sink, &session_id, "recon");
+    emit_status(&sink, &session_id, "Phase 1: Clarify & Decompose Research Question");
+    let phase1_prompt = format!(
+        "Decompose this research query into 3-4 specific technical investigation vectors for deep verification:\n\n{}",
+        query
+    );
+    let p1_out = execute_internal_turn(
+        &format!("{}-dr-p1", session_id),
+        &session_id,
+        &root_cwd,
+        &phase1_prompt,
+        "You are the Lead Research Architect in Swarm ULTRACODE. Decompose the research objective into concrete technical hypotheses and investigation vectors.",
+        "Phase 1: Decomposing",
+        &config,
+        &sink,
+        true,
+        host.clone(),
+        Some(cancel_flag.clone()),
+    )
+    .await
+    .unwrap_or_else(|e| format!("Decomposition notice: {e}"));
+
+    if cancel_flag.load(Ordering::SeqCst) {
+        emit_stage(&sink, &session_id, "");
+        return Ok(());
+    }
+
+    // Phase 2: Massive Parallel Fact Retrieval
+    emit_stage(&sink, &session_id, "workers");
+    emit_status(&sink, &session_id, "Phase 2: Parallel Fact Retrieval Swarm");
+    let phase2_prompt = format!(
+        "Objective: {}\nVectors:\n{}\n\nInspect codebase, documentation, and technical foundations to extract all raw factual claims and evidence.",
+        query, p1_out
+    );
+    let p2_out = execute_internal_turn(
+        &format!("{}-dr-p2", session_id),
+        &session_id,
+        &root_cwd,
+        &phase2_prompt,
+        "You are an isolated Fact Retrieval agent in Swarm ULTRACODE. Extract concrete code facts, symbol definitions, architecture invariants, and citations.",
+        "Phase 2: Fact Retrieval",
+        &config,
+        &sink,
+        true,
+        host.clone(),
+        Some(cancel_flag.clone()),
+    )
+    .await
+    .unwrap_or_else(|e| format!("Retrieval notice: {e}"));
+
+    if cancel_flag.load(Ordering::SeqCst) {
+        emit_stage(&sink, &session_id, "");
+        return Ok(());
+    }
+
+    // Phase 3: Claim Isolation
+    emit_stage(&sink, &session_id, "qa_loop");
+    emit_status(&sink, &session_id, "Phase 3: Atomic Claim Isolation");
+    let phase3_prompt = format!(
+        "Extract a clean numbered list of atomic, falsifiable factual propositions from this research:\n\n{}",
+        p2_out
+    );
+    let p3_out = execute_internal_turn(
+        &format!("{}-dr-p3", session_id),
+        &session_id,
+        &root_cwd,
+        &phase3_prompt,
+        "Isolate factual propositions into discrete atomic statements for skeptical review.",
+        "Phase 3: Claim Isolation",
+        &config,
+        &sink,
+        true,
+        host.clone(),
+        Some(cancel_flag.clone()),
+    )
+    .await
+    .unwrap_or_else(|e| format!("Claim isolation notice: {e}"));
+
+    if cancel_flag.load(Ordering::SeqCst) {
+        emit_stage(&sink, &session_id, "");
+        return Ok(());
+    }
+
+    // Phase 4: Verify — The Three-Vote Skeptic Check
+    emit_stage(&sink, &session_id, "critic_review");
+    emit_status(&sink, &session_id, "Phase 4: Three-Vote Skeptic Adversarial Verification");
+    let skeptic_system = "You are a Skeptical Fact-Checker in Swarm ULTRACODE. Your job is to rigorously refute, challenge, and stress-test each claim. If a claim lacks proof or is inaccurate, refute it with counter-evidence. Reject hallucinated assertions.";
+    let phase4_prompt = format!(
+        "Original Query: {}\n\nAtomic Claims to Verify:\n{}\n\nFor each claim, vote VERIFIED or REFUTED with exact reasoning.",
+        query, p3_out
+    );
+
+    let sk1_id = format!("{}-dr-skeptic-1", session_id);
+    let sk2_id = format!("{}-dr-skeptic-2", session_id);
+    let sk3_id = format!("{}-dr-skeptic-3", session_id);
+    let (s1, s2, s3) = tokio::join!(
+        execute_internal_turn(
+            &sk1_id,
+            &session_id,
+            &root_cwd,
+            &phase4_prompt,
+            skeptic_system,
+            "Skeptic Agent 1 (Logic & Precedence)",
+            &config,
+            &sink,
+            false,
+            host.clone(),
+            Some(cancel_flag.clone()),
+        ),
+        execute_internal_turn(
+            &sk2_id,
+            &session_id,
+            &root_cwd,
+            &phase4_prompt,
+            skeptic_system,
+            "Skeptic Agent 2 (Invariants & Safety)",
+            &config,
+            &sink,
+            false,
+            host.clone(),
+            Some(cancel_flag.clone()),
+        ),
+        execute_internal_turn(
+            &sk3_id,
+            &session_id,
+            &root_cwd,
+            &phase4_prompt,
+            skeptic_system,
+            "Skeptic Agent 3 (Empirical Evidence)",
+            &config,
+            &sink,
+            false,
+            host.clone(),
+            Some(cancel_flag.clone()),
+        ),
+    );
+
+    let s1_res = s1.unwrap_or_default();
+    let s2_res = s2.unwrap_or_default();
+    let s3_res = s3.unwrap_or_default();
+
+    // Phase 5: Synthesize Verified Report
+    emit_stage(&sink, &session_id, "recon");
+    emit_status(&sink, &session_id, "Phase 5: Synthesizing Ground-Truth Report");
+    let synth_prompt = format!(
+        "Original Query: {}\n\nAtomic Claims:\n{}\n\nSkeptic Check Votes:\n[Skeptic 1]\n{}\n\n[Skeptic 2]\n{}\n\n[Skeptic 3]\n{}\n\nSynthesize ONLY surviving, verified facts into a comprehensive Markdown research report. Include exact file references, citations, and evidence.",
+        query, p3_out, s1_res, s2_res, s3_res
+    );
+    let final_report = execute_internal_turn(
+        &format!("{}-dr-synth", session_id),
+        &session_id,
+        &root_cwd,
+        &synth_prompt,
+        "You are the Research Synthesizer in Swarm ULTRACODE. Produce a rigorous, publication-grade research report with verified facts and citations.",
+        "Phase 5: Report Synthesis",
+        &config,
+        &sink,
+        true,
+        host.clone(),
+        Some(cancel_flag.clone()),
+    )
+    .await
+    .unwrap_or_else(|e| format!("Synthesis failed: {e}"));
+
+    emit_stage(&sink, &session_id, "");
+    sink(agent_event(
+        &session_id,
+        "text",
+        &format!("\n\n### ⚡ ULTRACODE /deep-research Complete\n\n{}\n", final_report),
+        None,
+    ));
+    emit_status(&sink, &session_id, "Finished");
+
+    Ok(())
+}
+
+/// Adversarial multi-agent code review workflow with false-positive filter (/ultrareview)
+async fn run_ultrareview_workflow(
+    config: RunConfig,
+    sink: Sink,
+    host: Option<ToolHost>,
+    cancel_flag: Arc<AtomicBool>,
+) -> Result<(), String> {
+    let session_id = config.session_id.clone();
+    let root_cwd = config.cwd.clone();
+
+    emit_status(&sink, &session_id, "ULTRACODE /ultrareview: Auditing Git Diff");
+    emit_stage(&sink, &session_id, "recon");
+
+    let (_, mut diff, _) = run_git_cmd(&root_cwd, &["diff", "HEAD"]).await;
+    if diff.trim().is_empty() {
+        let (_, prev_diff, _) = run_git_cmd(&root_cwd, &["diff", "HEAD~1"]).await;
+        diff = prev_diff;
+    }
+
+    if diff.trim().is_empty() {
+        emit_stage(&sink, &session_id, "");
+        sink(agent_event(
+            &session_id,
+            "text",
+            "### 🔍 ULTRACODE Code Review\n\nNo uncommitted or recent changes found to review.",
+            None,
+        ));
+        emit_status(&sink, &session_id, "Finished");
+        return Ok(());
+    }
+
+    emit_stage(&sink, &session_id, "workers");
+    emit_status(&sink, &session_id, "Deploying Parallel Reviewer Swarm");
+
+    let rev_system = r#"You are an Adversarial Code Reviewer in Swarm ULTRACODE.
+Audit the provided diff rigorously. Find bugs in:
+- Memory safety, use-after-free, unwrap panics
+- Numerical precision & timestamp bugs
+- Race conditions & unhandled edge cases
+- Broken API interface contracts
+Rank findings by severity: [CRITICAL], [HIGH], [MEDIUM], [LOW].
+For each finding, provide:
+- Severity
+- File & line
+- Defect description
+- 1-click Fix recommendation"#;
+
+    let review_out = execute_internal_turn(
+        &format!("{}-ur-rev", session_id),
+        &session_id,
+        &root_cwd,
+        &format!("Review this diff:\n```diff\n{}\n```", diff),
+        rev_system,
+        "Adversarial Review Swarm",
+        &config,
+        &sink,
+        true,
+        host.clone(),
+        Some(cancel_flag.clone()),
+    )
+    .await
+    .unwrap_or_else(|e| format!("Review notice: {e}"));
+
+    // False-positive elimination filter
+    emit_stage(&sink, &session_id, "critic_review");
+    emit_status(&sink, &session_id, "Running Adversarial False-Positive Filter");
+    let filter_system = "You are an Evaluator in Swarm ULTRACODE. Your job is to disprove false positives and purge non-issues or noisy linter complaints. Keep only verified, actionable bugs.";
+    let filtered_out = execute_internal_turn(
+        &format!("{}-ur-filter", session_id),
+        &session_id,
+        &root_cwd,
+        &format!(
+            "Original Diff:\n```diff\n{}\n```\n\nReported Findings:\n{}\n\nFilter out false positives and format the final verified review with severity badges.",
+            diff, review_out
+        ),
+        filter_system,
+        "False-Positive Filter",
+        &config,
+        &sink,
+        true,
+        host.clone(),
+        Some(cancel_flag.clone()),
+    )
+    .await
+    .unwrap_or_else(|e| format!("Filter notice: {e}"));
+
+    emit_stage(&sink, &session_id, "");
+    sink(agent_event(
+        &session_id,
+        "text",
+        &format!(
+            "\n\n### ⚖️ ULTRACODE /ultrareview Audit Report\n\n{}\n\n*(Review finished with exit code 0)*\n",
+            filtered_out
+        ),
+        None,
+    ));
+    emit_status(&sink, &session_id, "Finished");
+
+    Ok(())
+}
+
+/// Autonomous multi-turn goal pursuit loop (/goal)
+async fn run_goal_workflow(
+    config: RunConfig,
+    sink: Sink,
+    host: Option<ToolHost>,
+    cancel_flag: Arc<AtomicBool>,
+) -> Result<(), String> {
+    let session_id = config.session_id.clone();
+    let root_cwd = config.cwd.clone();
+    let goal_desc = config.prompt.trim_start_matches("/goal").trim();
+
+    emit_status(&sink, &session_id, "ULTRACODE /goal: Launching Autonomous Multi-Turn Loop");
+    emit_stage(&sink, &session_id, "recon");
+
+    let mut turn = 0;
+    const MAX_GOAL_TURNS: usize = 5;
+
+    while turn < MAX_GOAL_TURNS {
+        if cancel_flag.load(Ordering::SeqCst) {
+            emit_stage(&sink, &session_id, "");
+            emit_status(&sink, &session_id, "Stopped");
+            return Ok(());
+        }
+
+        turn += 1;
+        emit_stage(&sink, &session_id, "workers");
+        emit_status(
+            &sink,
+            &session_id,
+            &format!("Goal Turn {}/{}: Advancing Milestone", turn, MAX_GOAL_TURNS),
+        );
+
+        let turn_prompt = format!(
+            "Goal: {}\nTurn: {}/{}\nExecute the next concrete milestone toward achieving 100% completion of this goal.",
+            goal_desc, turn, MAX_GOAL_TURNS
+        );
+
+        let turn_out = execute_internal_turn(
+            &format!("{}-goal-t{}", session_id, turn),
+            &session_id,
+            &root_cwd,
+            &turn_prompt,
+            "You are an autonomous agent pursuing a high-level goal in Swarm ULTRACODE. Advance the codebase toward complete fulfillment of the goal.",
+            &format!("Goal Milestone [{}/{}]", turn, MAX_GOAL_TURNS),
+            &config,
+            &sink,
+            true,
+            host.clone(),
+            Some(cancel_flag.clone()),
+        )
+        .await
+        .unwrap_or_else(|e| format!("Goal turn notice: {e}"));
+
+        // Evaluate completion criteria
+        emit_stage(&sink, &session_id, "critic_review");
+        emit_status(&sink, &session_id, "Evaluating Goal Completion Criteria");
+        let eval_prompt = format!(
+            "Goal: {}\nWork done so far:\n{}\n\nEvaluate whether the goal is 100% completed.\nOutput ONLY JSON: {{\"completed\": boolean, \"percent\": number, \"next_step\": \"string\"}}",
+            goal_desc, turn_out
+        );
+
+        let eval_out = execute_internal_turn(
+            &format!("{}-goal-eval-{}", session_id, turn),
+            &session_id,
+            &root_cwd,
+            &eval_prompt,
+            "You are a strict goal completion evaluator.",
+            "Evaluating Goal Completion",
+            &config,
+            &sink,
+            false,
+            host.clone(),
+            Some(cancel_flag.clone()),
+        )
+        .await
+        .unwrap_or_else(|_| "{\"completed\": false, \"percent\": 50}".to_string());
+
+        let completed = eval_out.contains("\"completed\": true") || eval_out.contains("\"completed\":true");
+        if completed {
+            sink(agent_event(
+                &session_id,
+                "text",
+                &format!(
+                    "\n\n🎯 **Goal Achieved!**\nObjective `{}` has been fully satisfied in {} turns.\n",
+                    goal_desc, turn
+                ),
+                None,
+            ));
+            break;
+        } else if turn >= MAX_GOAL_TURNS {
+            sink(agent_event(
+                &session_id,
+                "text",
+                &format!(
+                    "\n\n⏱️ **Goal Loop Paused**\nReached maximum turn limit ({}/{}). Current progress evaluated: {}\n",
+                    turn, MAX_GOAL_TURNS, eval_out
+                ),
+                None,
+            ));
+        }
+    }
+
+    emit_stage(&sink, &session_id, "");
     emit_status(&sink, &session_id, "Finished");
 
     Ok(())

@@ -49,6 +49,7 @@ mod usage_keychain;
 mod usage_ledger;
 mod workspace;
 pub mod ultra_engine;
+pub mod ultra_runtime;
 pub mod arena;
 pub mod vibe_time_machine;
 pub mod design_canvas;

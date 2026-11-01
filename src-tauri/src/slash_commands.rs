@@ -516,6 +516,24 @@ const LOCAL_ACTIONS: &[(&str, &str, &str, Option<&str>)] = &[
         "console",
         Some("[command]"),
     ),
+    (
+        "/deep-research",
+        "Deep 5-phase deterministic research with 3-vote skeptic check",
+        "deep-research",
+        Some("<query>"),
+    ),
+    (
+        "/ultrareview",
+        "Adversarial multi-agent code review with false-positive filter",
+        "ultrareview",
+        None,
+    ),
+    (
+        "/effort",
+        "Set reasoning effort or toggle /effort ultracode",
+        "effort",
+        Some("<level>"),
+    ),
 ];
 
 fn action_command(name: &str, description: &str, action: &str, hint: Option<&str>) -> SlashCommand {
@@ -545,6 +563,9 @@ fn is_local_control(name: &str) -> bool {
             | "/pwd"
             | "/diff"
             | "/console"
+            | "/deep-research"
+            | "/ultrareview"
+            | "/effort"
     )
 }
 

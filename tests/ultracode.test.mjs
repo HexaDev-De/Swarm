@@ -1,7 +1,25 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-const { ultracodeStageName } = await import('../src/ultracode.ts');
+// Mock localStorage if in node environment
+if (typeof globalThis.localStorage === 'undefined') {
+  const store = new Map();
+  globalThis.localStorage = {
+    getItem: (k) => store.get(k) ?? null,
+    setItem: (k, v) => store.set(k, String(v)),
+    removeItem: (k) => store.delete(k),
+    clear: () => store.clear(),
+  };
+}
+
+const {
+  ultracodeStageName,
+  detectUltracodeKeyword,
+  disarmUltracodeKeyword,
+  generateWorkflowScript,
+  isWorkflowsDisabled,
+  setWorkflowsDisabled,
+} = await import('../src/ultracode.ts');
 
 test('ultracodeStageName maps pipeline phases to human readable names', () => {
   assert.equal(ultracodeStageName('recon'), 'Recon');
@@ -11,6 +29,100 @@ test('ultracodeStageName maps pipeline phases to human readable names', () => {
   assert.equal(ultracodeStageName(null), 'Recon');
   assert.equal(ultracodeStageName(undefined), 'Recon');
   assert.equal(ultracodeStageName('custom_phase'), 'Custom_phase');
+});
+
+test('detectUltracodeKeyword respects human-input security guard and keyword patterns', () => {
+  // Genuine human inputs
+  assert.equal(detectUltracodeKeyword('ultracode: refactor auth', true), true);
+  assert.equal(detectUltracodeKeyword('Refactor this ultracode: please', true), true);
+  assert.equal(detectUltracodeKeyword('   ULTRACODE: Fix memory leaks   ', true), true);
+
+  // Untrusted / non-human inputs (webhooks, automation, injection guard)
+  assert.equal(detectUltracodeKeyword('ultracode: inject command', false), false);
+
+  // Plain non-ultracode inputs
+  assert.equal(detectUltracodeKeyword('Fix the typescript error', true), false);
+  assert.equal(detectUltracodeKeyword('', true), false);
+});
+
+test('disarmUltracodeKeyword cleanly removes trigger token', () => {
+  assert.equal(disarmUltracodeKeyword('ultracode: refactor auth module'), 'refactor auth module');
+  assert.equal(disarmUltracodeKeyword('ULTRACODE: please review'), 'please review');
+  assert.equal(disarmUltracodeKeyword('please ultracode: review'), 'please review');
+  assert.equal(disarmUltracodeKeyword('plain instruction'), 'plain instruction');
+});
+
+test('generateWorkflowScript produces valid deterministic orchestration script with primitives', () => {
+  const script = generateWorkflowScript('Port Bun Zig to Rust', 6, 32);
+  assert.ok(script.includes('await agent('));
+  assert.ok(script.includes('await parallel('));
+  assert.ok(script.includes('adversarialTriad('));
+  assert.ok(script.includes('Port Bun Zig to Rust'));
+  assert.ok(script.includes('Max Concurrency: 32'));
+  assert.ok(script.includes('length: 6'));
+});
+
+test('Pillar 1: parallel() fault tolerance returns null on sub-agent failure without aborting siblings', async () => {
+  async function parallel(thunks) {
+    const results = await Promise.allSettled(thunks.map(t => Promise.resolve().then(t)));
+    return results.map(r => (r.status === 'fulfilled' ? r.value : null));
+  }
+
+  const thunks = [
+    async () => ({ success: true, result: 'Subtask 1 complete' }),
+    async () => { throw new Error('API Rate Limit or Cognitive Collapse'); },
+    async () => ({ success: true, result: 'Subtask 3 complete' }),
+  ];
+
+  const outcomes = await parallel(thunks);
+  assert.equal(outcomes.length, 3);
+  assert.deepEqual(outcomes[0], { success: true, result: 'Subtask 1 complete' });
+  assert.equal(outcomes[1], null, 'Failing sub-agent must return null');
+  assert.deepEqual(outcomes[2], { success: true, result: 'Subtask 3 complete' });
+
+  const filtered = outcomes.filter(Boolean);
+  assert.equal(filtered.length, 2);
+  assert.equal(filtered[0].result, 'Subtask 1 complete');
+  assert.equal(filtered[1].result, 'Subtask 3 complete');
+});
+
+test('Pillar 1: pipeline() streams items through stages sequentially without global barrier', async () => {
+  const stageLog = [];
+
+  async function pipeline(items, stages) {
+    const outputs = [];
+    for (const item of items) {
+      let val = item;
+      for (let s = 0; s < stages.length; s++) {
+        val = await stages[s](val);
+      }
+      outputs.push(val);
+    }
+    return outputs;
+  }
+
+  const items = ['moduleA', 'moduleB'];
+  const stages = [
+    async (item) => { stageLog.push(`Implementer-${item}`); return `${item}-implemented`; },
+    async (item) => { stageLog.push(`Reviewer-${item}`); return `${item}-reviewed`; },
+  ];
+
+  const res = await pipeline(items, stages);
+  assert.deepEqual(res, ['moduleA-implemented-reviewed', 'moduleB-implemented-reviewed']);
+  assert.deepEqual(stageLog, [
+    'Implementer-moduleA',
+    'Reviewer-moduleA-implemented',
+    'Implementer-moduleB',
+    'Reviewer-moduleB-implemented',
+  ]);
+});
+
+test('Pillar 7: Enterprise safety lock disableWorkflows setting', () => {
+  setWorkflowsDisabled(true);
+  assert.equal(isWorkflowsDisabled(), true);
+
+  setWorkflowsDisabled(false);
+  assert.equal(isWorkflowsDisabled(), false);
 });
 
 test('ULTRACODE mode is orthogonal to thinking effort (low, medium, high)', () => {

@@ -11,46 +11,93 @@ export interface VoiceVibeController {
 
 export function createVoiceVibe(): VoiceVibeController {
   let recording = false;
+  let isStarting = false;
+  let isVoiceActive = false; // Push-to-talk F8 state
+  let isManualClick = false; // Click-to-toggle state
   let recognition: any = null;
   let audioContext: AudioContext | null = null;
   let analyser: AnalyserNode | null = null;
   let mediaStream: MediaStream | null = null;
+  let mediaRecorder: MediaRecorder | null = null;
   let animFrame = 0;
   let waveCanvas: HTMLCanvasElement | null = null;
   let btn: HTMLButtonElement | null = null;
   let promptRef: () => HTMLTextAreaElement | null = () => null;
 
   function isSpeechSupported(): boolean {
-    return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+    return typeof window !== 'undefined' && ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
   }
 
-  async function startAudioVisualizer(): Promise<void> {
+  async function startAudioCapture(): Promise<void> {
     try {
       mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      audioContext = new AudioCtx();
-      const source = audioContext.createMediaStreamSource(mediaStream);
-      analyser = audioContext.createAnalyser();
-      analyser.fftSize = 32;
-      source.connect(analyser);
+      
+      // If user already released F8 while getUserMedia was resolving, abort immediately
+      if (!isVoiceActive && !isManualClick) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
+        return;
+      }
 
-      drawWave();
-    } catch {
-      // Visualizer fails gracefully if microphone media stream is blocked
+      // 1. Initialize persistent MediaRecorder for hardware audio lifecycle
+      if (typeof MediaRecorder !== 'undefined') {
+        try {
+          mediaRecorder = new MediaRecorder(mediaStream);
+          mediaRecorder.ondataavailable = () => {};
+          mediaRecorder.onerror = () => {};
+          mediaRecorder.start();
+        } catch {
+          mediaRecorder = null;
+        }
+      }
+
+      // 2. Initialize AudioContext frequency visualizer
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioCtx) {
+        audioContext = new AudioCtx();
+        const source = audioContext.createMediaStreamSource(mediaStream);
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 32;
+        source.connect(analyser);
+        drawWave();
+      }
+    } catch (err) {
+      console.warn('Microphone stream access error:', err);
     }
   }
 
-  function stopAudioVisualizer(): void {
+  function stopAudioCapture(): void {
     cancelAnimationFrame(animFrame);
+    
+    // Stop MediaRecorder cleanly
+    if (mediaRecorder) {
+      try {
+        if (mediaRecorder.state !== 'inactive') {
+          mediaRecorder.stop();
+        }
+      } catch {}
+      mediaRecorder = null;
+    }
+
+    // Cleanly stop all tracks to release Windows microphone hardware
     if (mediaStream) {
-      mediaStream.getTracks().forEach(track => track.stop());
+      try {
+        mediaStream.getTracks().forEach(track => {
+          track.stop();
+        });
+      } catch {}
       mediaStream = null;
     }
+
+    // Close AudioContext
     if (audioContext && audioContext.state !== 'closed') {
-      audioContext.close().catch(() => {});
+      try {
+        audioContext.close().catch(() => {});
+      } catch {}
       audioContext = null;
     }
     analyser = null;
+
     if (waveCanvas) {
       const ctx = waveCanvas.getContext('2d');
       if (ctx) ctx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
@@ -104,50 +151,65 @@ export function createVoiceVibe(): VoiceVibeController {
   }
 
   async function start(): Promise<void> {
-    if (recording) return;
-
-    if (!isSpeechSupported()) {
-      toast('Speech recognition is not supported in this environment.');
-      return;
-    }
+    if (recording || isStarting) return;
+    isStarting = true;
 
     try {
-      const Speech = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      recognition = new Speech();
-      recognition.continuous = true;
-      recognition.interimResults = false;
-      recognition.lang = navigator.language || 'en-US';
+      if (isSpeechSupported()) {
+        try {
+          const Speech = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+          recognition = new Speech();
+          recognition.continuous = true;
+          recognition.interimResults = false;
+          recognition.lang = navigator.language || 'en-US';
 
-      recognition.onresult = (event: any) => {
-        let finalTranscript = '';
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript;
-          }
+          recognition.onresult = (event: any) => {
+            let finalTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+              if (event.results[i].isFinal) {
+                finalTranscript += event.results[i][0].transcript;
+              }
+            }
+            if (finalTranscript.trim()) {
+              const textarea = promptRef();
+              if (textarea) {
+                insertTextAtCursor(textarea, finalTranscript.trim());
+              }
+            }
+          };
+
+          // On Windows WebView2, transient speech errors must NOT terminate audio capture
+          recognition.onerror = (e: any) => {
+            console.warn('SpeechRecognition warning:', e?.error || e);
+          };
+
+          recognition.onend = () => {
+            if (recording && recognition) {
+              try {
+                recognition.start();
+              } catch {}
+            }
+          };
+
+          recognition.start();
+        } catch (e) {
+          console.warn('SpeechRecognition initialization error:', e);
+          recognition = null;
         }
-        if (finalTranscript.trim()) {
-          const textarea = promptRef();
-          if (textarea) {
-            insertTextAtCursor(textarea, finalTranscript.trim());
-          }
+      }
+
+      await startAudioCapture();
+
+      // Check if user cancelled while starting
+      if (!isVoiceActive && !isManualClick) {
+        stopAudioCapture();
+        if (recognition) {
+          try { recognition.stop(); } catch {}
+          recognition = null;
         }
-      };
+        return;
+      }
 
-      recognition.onerror = () => {
-        stop();
-      };
-
-      recognition.onend = () => {
-        if (recording) {
-          try {
-            recognition.start();
-          } catch {
-            stop();
-          }
-        }
-      };
-
-      recognition.start();
       recording = true;
       if (btn) {
         btn.classList.add('recording');
@@ -155,26 +217,29 @@ export function createVoiceVibe(): VoiceVibeController {
         btn.title = 'Stop dictation (Click or release F8)';
       }
       if (waveCanvas) waveCanvas.parentElement?.removeAttribute('hidden');
-
-      await startAudioVisualizer();
-    } catch {
+    } catch (err) {
+      console.warn('Voice start failed:', err);
       stop();
+    } finally {
+      isStarting = false;
     }
   }
 
   function stop(): void {
     isVoiceActive = false;
-    if (!recording) return;
+    isManualClick = false;
+    if (!recording && !isStarting) return;
     recording = false;
+
     if (recognition) {
       try {
         recognition.stop();
-      } catch {
-        // Ignore
-      }
+      } catch {}
       recognition = null;
     }
-    stopAudioVisualizer();
+
+    stopAudioCapture();
+
     if (btn) {
       btn.classList.remove('recording');
       btn.setAttribute('aria-pressed', 'false');
@@ -185,19 +250,22 @@ export function createVoiceVibe(): VoiceVibeController {
 
   async function toggle(): Promise<void> {
     if (recording) {
+      isManualClick = false;
       stop();
     } else {
+      isManualClick = true;
       await start();
     }
   }
 
-  // Hotkey push-to-talk handler (F8)
-  let isVoiceActive = false;
+  // Push-to-talk keyboard listener (F8)
   function onKeyDown(e: KeyboardEvent): void {
     if (e.key === 'F8') {
       e.preventDefault();
-      if (e.repeat || isVoiceActive || recording) return;
+      // Guard against OS key auto-repeat and active state
+      if (e.repeat || isVoiceActive) return;
       isVoiceActive = true;
+      isManualClick = false;
       void start();
     }
   }
@@ -205,7 +273,14 @@ export function createVoiceVibe(): VoiceVibeController {
   function onKeyUp(e: KeyboardEvent): void {
     if (e.key === 'F8') {
       e.preventDefault();
-      if (!isVoiceActive && !recording) return;
+      if (!isVoiceActive) return;
+      isVoiceActive = false;
+      stop();
+    }
+  }
+
+  function onBlur(): void {
+    if (isVoiceActive) {
       isVoiceActive = false;
       stop();
     }
@@ -213,6 +288,7 @@ export function createVoiceVibe(): VoiceVibeController {
 
   window.addEventListener('keydown', onKeyDown);
   window.addEventListener('keyup', onKeyUp);
+  window.addEventListener('blur', onBlur);
 
   return {
     isRecording: () => recording,
@@ -250,6 +326,7 @@ export function createVoiceVibe(): VoiceVibeController {
       stop();
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
+      window.removeEventListener('blur', onBlur);
     },
   };
 }

@@ -43,7 +43,7 @@ import { contextSummary, fallbackModel, parseContextUsage } from './model-catalo
 import { openCodeChoices, type OpenCodeModels } from './preview-opencode';
 import { approvalMode, approvalModes } from './approval-modes';
 import { renderTaskBoard, renderTaskDetails, taskStage } from './task-board';
-import { ultracodeStageName } from './ultracode';
+import { ultracodeStageName, detectUltracodeKeyword, disarmUltracodeKeyword, renderUltracodePill, removeUltracodePill, renderPreflightBanner, openWorkflowInspectorModal, updateSwarmMatrix } from './ultracode';
 import { streamMarkdown } from './streaming-markdown';
 import { TerminalPanel } from './terminal-panel';
 import { ProjectRunner } from './run-project';
@@ -1568,7 +1568,26 @@ function renderComposer(): void {
   const prompt = document.querySelector<HTMLTextAreaElement>('#prompt');
   // The prompt stays open during a run: messages typed then are queued or steered.
   // A finished run whose history failed to load waits for Retry before anything else is sent.
-  if (prompt) { prompt.value = previous; prompt.disabled = state.messagesLoading || Boolean(state.messagesError) || Boolean(finishingStreams.get(s.id)?.error); }
+  if (prompt) {
+    prompt.value = previous;
+    prompt.disabled = state.messagesLoading || Boolean(state.messagesError) || Boolean(finishingStreams.get(s.id)?.error);
+    if (s.ultracode || detectUltracodeKeyword(prompt.value, true)) {
+      renderUltracodePill(document.querySelector('#composer')!, () => disarmPromptKeyword(prompt));
+    }
+    prompt.addEventListener('input', (e) => {
+      const isHuman = (e as InputEvent).isTrusted;
+      if (detectUltracodeKeyword(prompt.value, isHuman)) {
+        renderUltracodePill(document.querySelector('#composer')!, () => disarmPromptKeyword(prompt));
+        if (s && !s.ultracode) {
+          s.ultracode = true;
+          void call('set_ultracode', { sessionId: s.id, ultracode: true });
+          renderHeader();
+        }
+      } else if (!s.ultracode) {
+        removeUltracodePill(document.querySelector('#composer')!);
+      }
+    });
+  }
   if (prompt && typing?.id === s.id && !prompt.disabled) { prompt.focus({ preventScroll: true }); prompt.setSelectionRange(typing.start, typing.end); }
   const footnote = document.querySelector('.composer-footnote');
   if (footnote) footnote.insertAdjacentHTML('beforeend', '<span class="context-indicator" hidden></span>');
@@ -2098,6 +2117,25 @@ async function performSlashAction(action: string, argumentsText: string, task: S
       if (!argumentsText) { showOpenProject(); break; }
       const added = await call<Project>('add_project', { path: argumentsText }); if (!state.projects.some(p => p.id === added.id)) state.projects.push(added); await createTask(added.id); break;
     }
+    case 'effort':
+      if (argumentsText.trim().toLowerCase() === 'ultracode') {
+        await toggleUltracode();
+        notify(session()?.ultracode ? 'ULTRACODE V2 Armed' : 'ULTRACODE V2 Disabled');
+      } else {
+        await showEffort($('#effort-picker-trigger'));
+      }
+      break;
+    case 'deep-research':
+    case 'ultrareview':
+    case 'code-review': {
+      if (!task.ultracode) {
+        await call('set_ultracode', { sessionId: task.id, ultracode: true });
+        task.ultracode = true;
+      }
+      const fullCmd = action === 'deep-research' ? `/deep-research ${argumentsText}` : `/ultrareview ${argumentsText}`;
+      await instruction(task, fullCmd.trim());
+      break;
+    }
     case 'plan': case 'fast': {
       if (action === 'fast' && argumentsText && !['on', 'off'].includes(argumentsText)) throw new Error('Use /fast, /fast on, or /fast off.');
       const settings = task.codexSettings;
@@ -2512,6 +2550,27 @@ function onAgent(event: AgentEvent): void {
       if (event.sessionId === state.sessionId) {
         renderHeader();
         renderBoardView();
+      }
+    }
+    return;
+  }
+  if (event.kind === 'ultracode_matrix') {
+    if (event.data && typeof event.data === 'object') {
+      updateSwarmMatrix(event.data as any);
+    }
+    return;
+  }
+  if (event.kind === 'ultracode_preflight') {
+    if (event.sessionId === state.sessionId && event.data) {
+      const container = document.querySelector<HTMLElement>('#composer-area');
+      if (container) {
+        renderPreflightBanner(
+          container,
+          event.data as any,
+          () => { /* Approved / proceed */ },
+          () => { void call('stop_session', { sessionId: event.sessionId }); },
+          () => { openWorkflowInspectorModal(session()?.title || 'Swarm Task', 'script'); }
+        );
       }
     }
     return;
@@ -3306,6 +3365,18 @@ async function toggleUltracode(): Promise<void> {
     configuringSessions.delete(s.id);
   }
 }
+function disarmPromptKeyword(prompt: HTMLTextAreaElement): void {
+  prompt.value = disarmUltracodeKeyword(prompt.value);
+  removeUltracodePill(document.querySelector('#composer')!);
+  const s = session();
+  if (s && s.ultracode) {
+    s.ultracode = false;
+    void call('set_ultracode', { sessionId: s.id, ultracode: false });
+    renderHeader();
+  }
+  resizePrompt();
+  notify('ULTRACODE disarmed');
+}
 async function showTaskMenu(anchor: HTMLElement): Promise<void> {
   const s = session(); if (!s) { await createTask(); return; }
   const isChat = Boolean(s.isStandaloneChat || s.projectId === 'standalone-chats');
@@ -4081,9 +4152,17 @@ document.addEventListener('keydown', event => {
     }
     return;
   }
-  // ⌘F finds in the open thread; ⌘G and ⇧⌘G step through its matches.
+  // ⌘F finds in the open thread; ⌘G and ⇧⌘G step through its matches; Ctrl+G opens ULTRACODE Workflow Inspector.
   if (command && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'f') { if (session() && transcriptVisible()) { event.preventDefault(); threadFind.open(); } return; }
-  if (command && !event.altKey && event.key.toLowerCase() === 'g' && threadFind.isOpen()) { event.preventDefault(); threadFind.step(event.shiftKey ? -1 : 1); return; }
+  if (command && !event.altKey && event.key.toLowerCase() === 'g') {
+    if (threadFind.isOpen()) { event.preventDefault(); threadFind.step(event.shiftKey ? -1 : 1); return; }
+    event.preventDefault(); openWorkflowInspectorModal(session()?.title || 'Swarm Task', 'script'); return;
+  }
+  // Alt+W / Option+W immediately disarms ULTRACODE keyword trigger
+  if (event.altKey && event.key.toLowerCase() === 'w') {
+    const prompt = document.querySelector<HTMLTextAreaElement>('#prompt');
+    if (prompt) { event.preventDefault(); disarmPromptKeyword(prompt); return; }
+  }
   if (command && event.key.toLowerCase() === 'n') { event.preventDefault(); if (state.view === 'board') showBoardTaskForm(); else run(createTask()); }
   else if (command && event.key.toLowerCase() === 'j') { event.preventDefault(); run(toggleTerminal()); }
   else if (command && event.key === ',') { event.preventDefault(); run(showSettings()); }

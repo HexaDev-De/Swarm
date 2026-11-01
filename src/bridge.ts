@@ -62,9 +62,10 @@ export async function chooseAttachmentFolder(): Promise<string | null> {
 export function fileAssetUrl(path: string): string {
   if (preview) return path;
   try {
+    const normalized = path.replace(/\\/g, '/');
     const internals = (window as any).__TAURI_INTERNALS__;
     if (internals && typeof internals.convertFileSrc === 'function') {
-      return internals.convertFileSrc(path, 'asset');
+      return internals.convertFileSrc(normalized, 'asset');
     }
   } catch { /* Fallback */ }
   return path;

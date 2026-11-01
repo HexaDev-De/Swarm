@@ -1,6 +1,6 @@
 [package]
 name = "pandacode"
-version = "0.1.2"
+version = "0.2.0"
 description = "Swarm — Multi-Agent AI Coding Workspace"
 authors = ["HexaDev-De"]
 repository = "https://github.com/HexaDev-De/Swarm"

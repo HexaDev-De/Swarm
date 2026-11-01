@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Swarm",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "identifier": "com.hexadev.swarm",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -35,6 +35,11 @@
         "scope": [
           "**",
           "/**",
+          "*:**",
+          "C:**",
+          "C:/**",
+          "D:**",
+          "D:/**",
           "$HOME/**",
           "$APPDATA/**",
           "$DOWNLOAD/**",

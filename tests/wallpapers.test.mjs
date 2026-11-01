@@ -109,12 +109,17 @@ test('ships 21 distinct local WebP scenes within a five MiB collection budget', 
 test('resolveWallpaperUrl handles asset protocols, web paths, and local file paths', () => {
   assert.equal(resolveWallpaperUrl(''), '');
   assert.equal(resolveWallpaperUrl('/wallpapers/mon-morning.webp'), '/wallpapers/mon-morning.webp');
+  assert.equal(resolveWallpaperUrl('honeycombs.svg'), '/honeycombs.svg');
+  assert.equal(resolveWallpaperUrl('/honeycombs.svg'), '/honeycombs.svg');
   assert.equal(resolveWallpaperUrl('data:image/png;base64,abc'), 'data:image/png;base64,abc');
   assert.equal(resolveWallpaperUrl('blob:http://localhost/abc'), 'blob:http://localhost/abc');
   assert.equal(resolveWallpaperUrl('http://asset.localhost/home/user/wall.png'), 'http://asset.localhost/home/user/wall.png');
   assert.equal(resolveWallpaperUrl('asset://localhost/home/user/wall.png'), 'asset://localhost/home/user/wall.png');
   assert.equal(resolveWallpaperUrl('file:///home/user/my%20video.mp4'), '/home/user/my video.mp4');
   assert.equal(resolveWallpaperUrl('/home/user/wallpaper.jpg'), '/home/user/wallpaper.jpg');
+  assert.equal(resolveWallpaperUrl('C:\\Users\\User\\Pictures\\wallpaper.png'), 'C:/Users/User/Pictures/wallpaper.png');
+  assert.equal(resolveWallpaperUrl('file:///C:/Users/User/Pictures/wallpaper.png'), 'C:/Users/User/Pictures/wallpaper.png');
+  assert.equal(resolveWallpaperUrl('/C:/Users/User/Pictures/wallpaper.png'), 'C:/Users/User/Pictures/wallpaper.png');
 });
 
 test('custom wallpaper preferences validate items and preserve valid pinned items', () => {

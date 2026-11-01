@@ -16,33 +16,45 @@ export async function resolveVideoBlobUrl(pathOrUrl: string): Promise<string> {
 export function resolveWallpaperUrl(pathOrUrl: string): string {
   if (!pathOrUrl) return '';
 
-  // Pass-through remote URLs and public web assets
+  // 1. Pass-through remote URLs, data URIs, blob URIs, and already-resolved asset URLs
   if (
     pathOrUrl.startsWith('http://') ||
     pathOrUrl.startsWith('https://') ||
     pathOrUrl.startsWith('data:') ||
     pathOrUrl.startsWith('blob:') ||
-    pathOrUrl.startsWith('asset:') ||
-    pathOrUrl.startsWith('/')
+    pathOrUrl.startsWith('asset://')
   ) {
     return pathOrUrl;
   }
 
-  // Handle file:// protocol prefix if present
+  // 2. Bundled public web assets
+  if (pathOrUrl === 'honeycombs.svg' || pathOrUrl === '/honeycombs.svg') {
+    return '/honeycombs.svg';
+  }
+  if (pathOrUrl.startsWith('/wallpapers/')) {
+    return pathOrUrl;
+  }
+
+  // 3. Normalize local paths and file:// URLs
   let cleanPath = pathOrUrl;
   if (cleanPath.startsWith('file:///')) {
-    cleanPath = decodeURIComponent(cleanPath.replace(/^file:\/\/\/?/, ''));
+    cleanPath = decodeURIComponent(cleanPath.slice(8));
     if (!/^[a-zA-Z]:/.test(cleanPath)) {
       cleanPath = '/' + cleanPath;
     }
   } else if (cleanPath.startsWith('file://')) {
-    cleanPath = decodeURIComponent(cleanPath.replace(/^file:\/\//, ''));
+    cleanPath = decodeURIComponent(cleanPath.slice(7));
   }
 
-  // Normalize Windows backslashes to forward slashes
+  // If path starts with Windows drive letter preceded by a slash, e.g. "/C:/..."
+  if (/^\/[a-zA-Z]:[\\/]/.test(cleanPath)) {
+    cleanPath = cleanPath.slice(1);
+  }
+
+  // Normalize Windows backslashes to forward slashes to prevent CSS escape issues
   const normalized = cleanPath.replace(/\\/g, '/');
 
-  // Convert to WebView2-safe asset protocol URL
+  // Convert to WebView2-safe asset protocol URL in Tauri environment
   if (typeof window !== 'undefined' && (window as any).__TAURI_INTERNALS__?.convertFileSrc) {
     try {
       return convertFileSrc(normalized);

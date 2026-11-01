@@ -13,11 +13,11 @@ There are **no accounts**, **no subscriptions**, **no license checks**, and **ze
 Built natively with **Tauri 2**, **Rust**, **SQLite**, and vanilla TypeScript. Swarm leverages your operating system's native webview (WebKit / WebView2) without bundled Chromium binaries, resident Node.js server overhead, heavy React runtimes, or sluggish web editor engines.
 
 <p align="center">
-  <b>Official v0.1.2 Downloads:</b>
-  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.1.2/Swarm-macOS-arm64.dmg">macOS (Apple Silicon)</a> ·
-  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.1.2/Swarm-Windows-x64-setup.exe">Windows x64</a> ·
-  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.1.2/Swarm-Linux-x86_64.AppImage">Linux x86_64 AppImage</a> ·
-  <a href="https://github.com/HexaDev-De/Swarm/releases/tag/v0.1.2">All Releases</a>
+  <b>Official v0.2.0 Downloads:</b>
+  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.2.0/Swarm-macOS-arm64.dmg">macOS (Apple Silicon)</a> ·
+  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.2.0/Swarm-Windows-x64-setup.exe">Windows x64</a> ·
+  <a href="https://github.com/HexaDev-De/Swarm/releases/download/v0.2.0/Swarm-Linux-x86_64.AppImage">Linux x86_64 AppImage</a> ·
+  <a href="https://github.com/HexaDev-De/Swarm/releases/tag/v0.2.0">All Releases</a>
 </p>
 
 ---
@@ -67,11 +67,13 @@ Swarm was engineered from the ground up for instantaneous responsiveness and min
 
 ## 🌟 Flagship Features
 
-### 1. ULTRACODE Multi-Agent Engine
-- **Hierarchical Swarm Orchestration**: The lead architect evaluates tasks and deploys up to 8 autonomous parallel workers in isolated Git worktrees (`.git/ultra_worktrees/`).
-- **Semantic Interface Locking**: TypeScript interfaces and Rust traits are compiled and locked as read-only ground truth prior to code generation.
-- **Two-Tier Verification**: Each worker satisfies localized test suites before triggering global integration validation and atomic Git merges.
-- **Automated Critic Escalation**: Failsafes trigger critic review turns and autonomous patch generation.
+### 1. ULTRACODE V2 Multi-Agent Operating System
+- **Deterministic Sandboxed Workflow Runtime**: Coordinates massive swarms of sub-agents using deterministic async workflows (`agent()`, `parallel()`, `pipeline()`, `adversarialTriad()`) while keeping intermediate state out of the main conversation context.
+- **Massive Concurrency Scaling & 1,000-Agent Circuit Breaker**: Scales dynamically from 16 up to 256 concurrent agents (`SWARM_WORKFLOW_MAX_CONCURRENT_AGENTS`) with an atomic counter hard cap at 1,000 agents.
+- **The Adversarial Review Triad**: Erases confirmation bias by pairing Implementer agents with twin antagonistic reviewers in parallel virgin contexts (Memory/Safety & Logic/Contracts) and a surgical fixer agent.
+- **Bun Port Industrial Methodology**: Persists Phase 0 typological ground truth (`.swarm/ultra/ARCHITECTURE_MAP.md`, `CONTRACTS.tsv`), enforces a sub-agent destructive command firewall, and clusters compiler diagnostics for parallel repair.
+- **Built-in Workflows**: `/deep-research` (5-phase 3-vote skeptic verification), `/ultrareview` (adversarial false-positive filtered code review), and `/goal` (autonomous multi-turn loop).
+- **Interactive Activation UX**: Glowing purple `ultracode:` keyword detection, `Alt+W` / `Option+W` instant disarming, pre-flight estimation bar, and `Ctrl+G` Live Workflow Script & Swarm Matrix modal.
 
 ### 2. Dual-Harness Arena (2x Race Mode)
 - **Side-by-Side Execution**: Race two LLM harnesses (e.g., Claude Code vs. Codex, or DeepSeek vs. Kimi) simultaneously on the identical prompt.
